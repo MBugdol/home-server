@@ -1,6 +1,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+import backend
+
+print(backend.add(1, 2))
+
+
+#uvicorn main:app --reload
+
+if __name__ == '__main__':
+	import uvicorn
+	uvicorn.run('main:app', reload = True)
+	
 app = FastAPI()
 
 class TestFileRequest(BaseModel):

@@ -4,15 +4,18 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQuickControls2 import QQuickStyle
 
-import rc_style
+import app.flow as flow
 
-if __name__ == '__main__':
+def exec():
 	app = QGuiApplication(sys.argv)
 	QQuickStyle.setStyle("Material")
 	engine = QQmlApplicationEngine()
 
+	flow_controller = flow.FlowController()
+	engine.rootContext().setContextProperty("FlowController", flow_controller)
+
 	main_qml = QDir(__file__)
-	main_qml.cd('../../src-qml')
+	main_qml.cd('../../gui')
 	print(main_qml.absoluteFilePath('main.qml'))
 	engine.load(main_qml.absoluteFilePath('main.qml'))
 
