@@ -8,8 +8,8 @@ The server project has the following prerequisites:
 - Python3 and pip - you can download them from [here](https://www.python.org/downloads/).
 
 Step-by-step tutorial for launching this project:
-1. Use CMake to launch the top-level CMakeLists.txt. You can do this by using the 'cmake --build <output_dir>' command,
+1. Use CMake to launch the top-level CMakeLists.txt. You can do this by using the `cmake --build <output_dir>` command,
 2. Wait for the CMake process to finish - it creates a virtual Python environment, compiles the C++ library into a dynamic library and initializes the whole dependency chain for you,
 3. Run main.py - that's all!
 
-You can also launch the server from the Python terminal using 'uvicorn main:app' command. This is a basic server launch command - see [uvicorn.org](https://www.uvicorn.org/#command-line-options) for all of the possible options.
+You can also launch the server from the Python terminal using `uvicorn main:app` command. This is a basic server launch command - see [uvicorn.org](https://www.uvicorn.org/#command-line-options) for all of the possible options.
