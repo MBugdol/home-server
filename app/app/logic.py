@@ -3,6 +3,21 @@ from PySide6.QtCore import QObject, Slot
 
 _default_url = 'http://localhost:8000'
 
+class APICaller(QObject):
+	def __init__(self):
+		QObject.__init__(self)
+		
+	@Slot(str, result = bool)
+	def createFolder(self, directory):
+		payload = {
+			"directory" : directory
+		}
+		response = requests.post(_default_url + '/add-folder/', json = payload)
+		if response.status_code == 200:
+			return True
+		else:
+			return False
+
 class RequestsObject (QObject):
 	def __init__(self):
 		QObject.__init__(self)
@@ -15,6 +30,8 @@ class RequestsObject (QObject):
 	@Slot(result = str)
 	def postTestEndpoint(self):
 		return str(testEndpoint())
+	
+	
 
 def root():
 	response = requests.get(_default_url + '/')

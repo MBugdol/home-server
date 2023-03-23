@@ -8,7 +8,7 @@ pybind11_add_module(backend)
 target_sources(backend
 	PRIVATE	
 	src/module.cpp
- "src/file_access.cpp" "src/file_access.h")
+ "src/file_access.cpp" "src/file_access.h" "src/debug.h")
 
 target_include_directories(backend PRIVATE vendor/asio-1.24.0/include)
 if(NOT ${HOSE_INSTALL_PATH} EQUAL "")

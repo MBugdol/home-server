@@ -28,5 +28,6 @@ def test(param: TestFileRequest):
 def add_folder(folder: Folder):
 	try:
 		fh.createFolder(folder.directory)
-	except:
+	except Exception as e:
+		print(e)
 		raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail="The given folder path must be absolute with regard to server root directory")

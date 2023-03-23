@@ -4,15 +4,26 @@
 #include <string>
 
 namespace HomeServer {
-
+	namespace fs = std::filesystem;
 class FileHandler
 {
-public:
+public: // class api
 	void createHomeServerDirectory();
 	void createFolder(const std::string& folder_path);
-private:
-	static void createFolderIfNotExists(std::filesystem::path path);
-	std::filesystem::path m_root_dir;
+private: // private methods
+	/**
+	 * @brief Returns the given path in a sanitized form.
+	 * Converts the given string to a std::filesystem::path object and 
+	 * changes the separators to the preferred ones.
+	 * @param string_path the path to sanitize
+	 * @return std::filesystem::path the sanitized path 
+	 */
+	fs::path sanitizedPath(const std::string& string_path);
+	bool isContainedInRootDir(fs::path absolute_path);
+	void createFolderIfNotExists(fs::path path);
+	void createFolderChainTo(fs::path path);
+private: // member variables 
+	fs::path m_root_dir;
 };
 
 } // namespace HomeServer
