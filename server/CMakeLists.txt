@@ -1,6 +1,7 @@
 #
 #	Set project prerequisites
 #
+
 cmake_minimum_required(VERSION 3.18)
 project(Server)
 
@@ -15,6 +16,12 @@ set(PYTHON_VENV_PATH
 	"${CMAKE_CURRENT_LIST_DIR}/venv" CACHE PATH 
 	"Path to the python virtual environment")
 message(TRACE "PYTHON_VENV_PATH: ${PYTHON_VENV_PATH}")
+
+set(HOSE_INSTALL_PATH
+	"" CACHE PATH
+	"Path to install and store HomeServer files in"
+)
+message(TRACE "HOSE_INSTALL_PATH: ${HOSE_INSTALL_PATH}")
 
 #
 #	Python initialization

@@ -7,6 +7,8 @@ The server project has the following prerequisites:
 - CMake - see [this page](https://cmake.org/cmake/help/latest/guide/tutorial/A%20Basic%20Starting%20Point.html) for a brief tutorial,
 - Python3 and pip - you can download them from [here](https://www.python.org/downloads/).
 
+I suggest using Visual Studio for **backend** module building due to it already supporting CMake and Visual Studio Code with the Python extension for modyfying the Python files.
+
 Step-by-step tutorial for launching this project:
 1. Use CMake to launch the top-level CMakeLists.txt. You can do this by using the `cmake --build <output_dir>` command,
 2. Wait for the CMake process to finish - it creates a virtual Python environment, compiles the C++ library into a dynamic library and initializes the whole dependency chain for you,

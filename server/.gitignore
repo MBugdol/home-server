@@ -4,3 +4,4 @@ venv/
 .vs/
 bin/
 *.egg-info/
+cpp/vendor/asio-1.24.0/src
