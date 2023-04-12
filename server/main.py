@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, status
-from structures import TestFileRequest, Folder
+from structures import Folder
 
 from backend import FileHandler
 
@@ -10,24 +10,15 @@ if __name__ == '__main__':
 app = FastAPI()
 
 fh = FileHandler()
-fh.createHomeServerDirectory()
 
-@app.get("/")
+@app.get('/')
 def root():
-	return {"Hello":"World"}
+	return {'message' : 'Hello world!'}
 
-@app.post("/test/")
-def test(param: TestFileRequest):
-	result =  f'Test request of file {param.filename}, which ' + ('is' if param.isFolder else 'isn\'t') + f' a folder'
-	if(param.testParam is not None):
-		result += f' with a test param of {param.testParam}'
-	result += '.'
-	return result
-
-@app.post("/add-folder/")
+@app.post('/add-folder/')
 def add_folder(folder: Folder):
 	try:
 		fh.createFolder(folder.directory)
 	except Exception as e:
 		print(e)
-		raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail="The given folder path must be absolute with regard to server root directory")
+		raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail='The given folder path must be absolute with regard to server root directory')

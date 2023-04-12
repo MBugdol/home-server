@@ -29,8 +29,8 @@ static constexpr const char* short_funct(const char* long_funct)
 }
 
 #define debug() \
-	(Debug{}.addNoSpace("[").addNoSpace(filename_from_path(__FILE__)).addNoSpace("::").addNoSpace(__LINE__) << \
-	"(").addNoSpace(short_funct(__FUNCTION__)).addNoSpace(")] ")
+	(Debug{}.addNoSpace("[").addNoSpace(filename_from_path(__FILE__)).addNoSpace("::").addNoSpace(__LINE__).addNoSpace("(")) \
+	.addNoSpace(short_funct(__FUNCTION__)).addNoSpace(")] ")
 
 class Debug
 {

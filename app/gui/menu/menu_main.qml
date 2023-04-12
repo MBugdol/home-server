@@ -1,37 +1,49 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Material
+import QtQuick.Layouts
+import "../utils"
 
 Page {
 	id: root
-	background: Rectangle {color: "green"}
-	Column {
-		height: childrenRect.height
-		width: parent.width
-		anchors.centerIn: parent
-		TextArea {
-			id: dirinput
-			width: 0.8 * parent.width
-			anchors.horizontalCenter: parent.horizontalCenter
-		}
-		Button {
-			anchors.horizontalCenter: parent.horizontalCenter
-			text: "Create folder!"
-			onClicked: {
-				var success = APICaller.createFolder(dirinput.text)
-				if(success) {
-					resText.text = "Successfully created directory " + dirinput.text
-					resText.color = "green"
+	background: Rectangle {color: Material.backgroundColor}
+	ScrollView {
+		id: mainMenuScroll
+		anchors.fill: parent
+		GridLayout {
+			id: tileGrid
+			readonly property int minColSpacing: 5
+			readonly property int tileSide: 100
+			// some lovely gui math
+			columns: (mainMenuScroll.width + minColSpacing) / (tileSide + minColSpacing)
+			columnSpacing: (mainMenuScroll.width - columns * tileSide) / (columns-1)
+			component GridTile: Tile {
+				Layout.preferredWidth: tileGrid.tileSide
+				Layout.preferredHeight: tileGrid.tileSide
+				color: "transparent"
+				property alias text: containedText.text
+				Label {
+					id: containedText
+					anchors.centerIn: parent
 				}
-				else {
-					resText.text = "Specified directory is not a valid directory!"
-					resText.color = "red"
+				
+			}
+			Repeater {
+				model: 2000
+				GridTile {
+					onClicked: console.log("I'm item no. " + index)
+					text: index
+					Image {
+						anchors.centerIn: parent
+						width: 0.8 * parent.width
+						height: 0.8 * parent.width
+						sourceSize.width: width
+						sourceSize.height: height
+						source: Math.random() < 0.5 ? "../res/img/folder-icon.svg" : "../res/img/file-icon.svg" // add main.qml to qrc?
+						fillMode: Image.PreserveAspectFit
+					}
 				}
 			}
 		}
-		Label {
-			id: resText
-			background: Pane {}
-			anchors.horizontalCenter: parent.horizontalCenter
-		}
-	}
+	} // mainMenuScroll
 }

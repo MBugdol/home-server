@@ -12,10 +12,11 @@ class APICaller(QObject):
 		payload = {
 			"directory" : directory
 		}
-		response = requests.post(_default_url + '/add-folder/', json = payload)
-		if response.status_code == 200:
-			return True
-		else:
+		try:
+			response = requests.post(_default_url + '/add-folder/', json = payload)
+			return response.status_code == 200
+		except Exception as e:
+			print(e)
 			return False
 
 class RequestsObject (QObject):

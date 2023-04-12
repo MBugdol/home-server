@@ -7,11 +7,6 @@ ApplicationWindow {
 	visible: true
 	width: 500
 	height: 500
-	header: Button {
-		width: parent.width
-		text: "Pop!"
-		onClicked: FlowController.pop()
-	}
 	
 	StackView {
 		id: menuStack

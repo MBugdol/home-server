@@ -9,7 +9,7 @@ if not os.path.exists(library_binary_dir):
 
 library_binary_file = ""
 for content in os.listdir(library_binary_dir):
-	if content.endswith('.pyd') and 'backend' in content:
+	if content.endswith('.pyd'):
 		library_binary_file = os.path.join('bin', content)
 		break
 

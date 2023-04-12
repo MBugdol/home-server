@@ -60,4 +60,6 @@ message("Setting prerequisites for the C++ module...")
 set(PYBIND11_PATH "${PYTHON_VENV_PATH}/Lib/site-packages/pybind11/share/cmake/pybind11")
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PYBIND11_PATH})
 
+enable_testing()
 add_subdirectory(cpp)
+
