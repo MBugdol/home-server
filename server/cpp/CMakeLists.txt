@@ -1,8 +1,5 @@
 message(NOTICE "Starting work on the C++ extension")
 
-message(NOTICE "Looking for required packages...")
-find_package(pybind11 REQUIRED)
-
 set(CMAKE_CXX_STANDARD 20 REQUIRED)
 
 #
@@ -17,15 +14,27 @@ set(HOSE_BACKEND_SOURCES
 	"include/entry.h" "src/filesystem_structure/entry.cpp"
 	"include/directory.h" "src/filesystem_structure/directory.cpp" 
 	"include/file.h" "src/filesystem_structure/file.cpp"
-)
+
+	"include/database.h" "src/database/database.cpp"
+	"include/queryiterator.h" "src/database/queryiterator.cpp"
+	"include/query.h" "src/database/query.cpp"
+	"include/userstable.h" "src/database/userstable.cpp" 
+	"include/concepts.h"
+
+	"include/accountmanager.h" "src/auth/accountmanager.cpp"
+	
+	"vendor/sqlite/sqlite3.h" "vendor/sqlite/sqlite3.c" 
+	
+ "include/user.h"    )
 
 add_library(HoseBackendLib STATIC ${HOSE_BACKEND_SOURCES})
 target_include_directories(HoseBackendLib 
 	PUBLIC
-		include
+		"include",
+		"vendor/sqlite"
 	PRIVATE
-		src 
-		vendor/asio-1.24.0/include
+		"src",
+		#"vendor/asio-1.24.0/include"
 )
 
 # target compile definitions
@@ -42,8 +51,10 @@ endif()
 #
 
 message(NOTICE "Creating the Python module...")
-
+find_package(pybind11 REQUIRED)
 pybind11_add_module(HoseBackendPythonModule)
+
+
 target_sources(HoseBackendPythonModule PRIVATE module.cpp)
 target_link_libraries(HoseBackendPythonModule PRIVATE HoseBackendLib)
 

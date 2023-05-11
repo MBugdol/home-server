@@ -7,6 +7,21 @@ import "../utils"
 Page {
 	id: root
 	background: Rectangle {color: Material.backgroundColor}
+	header: ToolBar {
+		Row {
+			anchors.fill: parent
+			ToolButton {
+				text: "Test1"
+			}
+			ToolButton {
+				text: "Test2"
+			}
+			Switch {
+
+			}
+		}
+	
+	}
 	ScrollView {
 		id: mainMenuScroll
 		anchors.fill: parent

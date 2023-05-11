@@ -54,6 +54,7 @@ message(NOTICE "Python prerequisites installed!")
 
 #
 #	Preparing the C++ module
+#	Preparing the C++ module
 #
 message("Setting prerequisites for the C++ module...")
 

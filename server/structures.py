@@ -7,3 +7,7 @@ class TestFileRequest(BaseModel):
 
 class Folder(BaseModel):
 	directory: str
+
+class LoginParams(BaseModel):
+	login: str
+	password: str
