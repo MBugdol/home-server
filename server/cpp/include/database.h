@@ -5,7 +5,6 @@
 #include <string>
 
 #include <sqlite3.h>
-//#include "../vendor/sqlite/sqlite3.h"
 
 namespace HomeServer 
 {

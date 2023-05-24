@@ -9,7 +9,7 @@ namespace HomeServer
 
 struct User
 {
-	std::optional<int> id;
+	std::optional<int64_t> id;
 	std::string username;
 	std::string password_hash;
 	std::string salt;

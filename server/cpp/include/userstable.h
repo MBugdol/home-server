@@ -3,6 +3,7 @@
 
 #include <database.h>
 #include <user.h>
+#include <query.h>
 
 namespace HomeServer
 {
@@ -10,13 +11,15 @@ namespace HomeServer
 class UsersTable
 {
 public:
-	UsersTable();
+	UsersTable(sqlite3* database);
 	std::vector<User> getAllUsers();
-	void insertUser(const std::string& username, const std::string& hash, const std::string& salt);
+	void insertUser(const User& user);
+	std::optional<int64_t> getUserId(const std::string username);
 private:
 	void initialize();
 private:
 	sqlite3* m_database;
+	Query m_query;
 };
 
 } // namespace HomeServer

@@ -2,16 +2,22 @@
 #define HOSE_ACCOUNTMANAGER_H
 
 #include <string>
+#include <user.h>
+#include <userstable.h>
 
 namespace HomeServer
 {
 
 class AccountManager 
 {
+public:
+	AccountManager();
+	void registerUser(const std::string& username, const std::string& password_plain);
+//private:
+	std::string getRandom128BitString();
 private:
-	std::string m_password;
-	std::string m_salt;
-	std::string m_hash;
+	UsersTable m_users_table;
+	User m_user;
 };
 
 } // namespace HomeServer

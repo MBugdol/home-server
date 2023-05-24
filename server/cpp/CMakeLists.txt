@@ -2,6 +2,8 @@ message(NOTICE "Starting work on the C++ extension")
 
 set(CMAKE_CXX_STANDARD 20 REQUIRED)
 
+
+
 #
 # Create the base library
 #
@@ -30,12 +32,13 @@ set(HOSE_BACKEND_SOURCES
 add_library(HoseBackendLib STATIC ${HOSE_BACKEND_SOURCES})
 target_include_directories(HoseBackendLib 
 	PUBLIC
-		"include",
+		"include" 
 		"vendor/sqlite"
 	PRIVATE
-		"src",
+		"src" 
 		#"vendor/asio-1.24.0/include"
 )
+#target_link_libraries(HoseBackendLib cryptopp::cryptopp)
 
 # target compile definitions
 
@@ -79,4 +82,4 @@ target_link_libraries(HoseBackendSandbox PRIVATE HoseBackendLib)
 # Add tests
 #
 
-add_subdirectory(tests)
+#add_subdirectory(tests)

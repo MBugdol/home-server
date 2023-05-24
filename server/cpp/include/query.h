@@ -16,7 +16,7 @@ class Query
 	friend class QueryIterator; //< used for the QueryIterator(const Query&) constructor
 
 public:
-	Query(sqlite3* database);
+	Query(sqlite3* database = nullptr);
 	~Query();
 	void prepare(const std::string& query_string);
 	void execute();

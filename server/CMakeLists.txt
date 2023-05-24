@@ -5,6 +5,7 @@
 cmake_minimum_required(VERSION 3.18)
 project(Server)
 
+
 #
 #	Prepare the CMake options
 #	To modify these options use your editor's project options
@@ -62,5 +63,12 @@ set(PYBIND11_PATH "${PYTHON_VENV_PATH}/Lib/site-packages/pybind11/share/cmake/py
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PYBIND11_PATH})
 
 enable_testing()
+
+message(NOTICE "Importing dependencies...")
+
+add_subdirectory(cpp/vendor/cryptopp)
+
+message(NOTICE "Dependencies imported")
+
 add_subdirectory(cpp)
 

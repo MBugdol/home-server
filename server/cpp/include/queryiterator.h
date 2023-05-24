@@ -35,7 +35,7 @@ template<>
 std::string getValueFromColumn(sqlite3_stmt* stmt, size_t pos);
 
 template<typename T>
-std::tuple<T> tupleFromStmt(sqlite3_stmt* stmt, size_t pos)
+std::tuple<T> tupleFromStmt(sqlite3_stmt* stmt, size_t pos=0)
 {
 	return std::make_tuple(getValueFromColumn<T>(stmt, pos));
 }
