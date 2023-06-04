@@ -14,6 +14,8 @@ public:
 	UsersTable(sqlite3* database);
 	std::vector<User> getAllUsers();
 	void insertUser(const User& user);
+	User getUserByUsername(const std::string& username);
+	User getUserById(const int64_t id);
 	std::optional<int64_t> getUserId(const std::string username);
 private:
 	void initialize();

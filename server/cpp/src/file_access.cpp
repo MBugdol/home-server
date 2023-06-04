@@ -3,11 +3,10 @@
 #include <cassert>
 #include "debug.h"
 #include "directory.h"
-//#include <asio.hpp>
 
 namespace HomeServer
 {
-	namespace fs = std::filesystem;
+namespace fs = std::filesystem;
 
 void FileHandler::createFolder(const std::string& folder_path_str)
 {

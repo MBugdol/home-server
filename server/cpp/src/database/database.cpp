@@ -12,7 +12,7 @@ Database::Database()
 {
 	debug() << "Opening necessary database connections...";
 	fs::path test_db_location = fs::current_path() / "testdb.db";
-	open(test_db_location.string(), "testdb");
+	open(test_db_location.string(), "hose");
 	debug() << "Database singleton constructed";
 }
 

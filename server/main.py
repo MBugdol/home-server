@@ -1,8 +1,10 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Request
 import structures as structs
 import mainlogic as logic
+import functools
 
 from backend import FileHandler
+import backend
 
 if __name__ == '__main__':
 	import uvicorn
@@ -11,6 +13,15 @@ if __name__ == '__main__':
 app = FastAPI()
 
 fh = FileHandler()
+
+def exceptionAs422Details(func):
+	@functools.wraps(func)
+	def exceptionAs422DetailsDecorator(*args, **kwargs):
+		try:
+			func()
+		except Exception as e:
+			raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
+	return exceptionAs422DetailsDecorator
 
 @app.get('/')
 def root():
@@ -25,10 +36,16 @@ def add_folder(folder: structs.Folder):
 		raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail='The given folder path must be absolute with regard to server root directory')
 	
 @app.post('/login')
-def login(args: structs.LoginParams):
-	print(f"Login: {args.login}, password: {args.password}")
+def login(user: structs.User):
+	if(backend.login(user.login, user.password)):
+		return "Login successful!"
+	raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Invalid login or password")
 
-	return {"id" : 0}
+@app.post('/register', status_code = status.HTTP_201_CREATED)
+def register(user: structs.User):
+	backend.registerUser(user.login, user.password)
+	return "User successfuly registered!"
+
 
 @app.post('/upload/init')
 def initializeFileTransfer():

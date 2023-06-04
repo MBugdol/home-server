@@ -45,13 +45,46 @@ void UsersTable::insertUser(const User& user)
 		"?, ?, ?, ?"
 		")";
 	m_query.prepare(query);
-	m_query.bind(1, user.id.value());
+	m_query.bind_nullable(1, user.id);
 	m_query.bind(2, user.username);
 	m_query.bind(3, user.password_hash);
 	m_query.bind(4, user.salt);
 	m_query.execute();
 }
 
+User UsersTable::getUserByUsername(const std::string& username)
+{
+	std::string query = "SELECT UserId, PasswordHash, Salt "
+		"FROM Users "
+		"WHERE Username = ?";
+	m_query.prepare(query);
+	m_query.bind(1, username);
+	m_query.execute();
+
+	auto [id, password_hashed, salt] = *QueryIterator<uint64_t, std::string, std::string>{ m_query }.begin();
+	return {
+		id,
+		username,
+		password_hashed,
+		salt
+	};
+}
+
+User UsersTable::getUserById(const int64_t id)
+{
+	std::string query = "SELECT Username, PasswordHash, Salt "
+		"FROM Users "
+		"WHERE UserId = ?";
+	m_query.bind(1, id);
+
+	auto [username, password_hashed, salt] = *QueryIterator<std::string, std::string, std::string>{ m_query }.begin();
+	return {
+		id,
+		username,
+		password_hashed,
+		salt
+	};
+}
 
 std::vector<User> UsersTable::getAllUsers()
 {

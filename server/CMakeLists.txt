@@ -67,6 +67,7 @@ enable_testing()
 message(NOTICE "Importing dependencies...")
 
 add_subdirectory(cpp/vendor/cryptopp)
+add_subdirectory(cpp/vendor/json)
 
 message(NOTICE "Dependencies imported")
 

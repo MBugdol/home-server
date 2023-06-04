@@ -8,6 +8,6 @@ class TestFileRequest(BaseModel):
 class Folder(BaseModel):
 	directory: str
 
-class LoginParams(BaseModel):
+class User(BaseModel):
 	login: str
 	password: str

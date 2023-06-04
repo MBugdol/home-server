@@ -31,6 +31,8 @@ void Query::execute()
 		sqlite3_finalize(m_stmt);
 		m_stmt = nullptr;
 	}
+	else if(err != SQLITE_ROW)
+		throw std::runtime_error(std::string{ "Failed to execute query! Query: " } + sqlite3_sql(m_stmt) + ", error message: " + sqlite3_errmsg(m_db));
 }
 
 void Query::execute(const std::string& query_string)
@@ -69,5 +71,13 @@ void Query::bind(const int pos, const std::string&& val)
 	if (err)
 		throw std::runtime_error{ std::string{"Failed to bind parameter to statement! "} + sqlite3_errmsg(m_db) };
 }
+
+void Query::bind_null(const int pos)
+{
+	int err = sqlite3_bind_null(m_stmt, pos);
+	if (err)
+		throw std::runtime_error{ std::string{"Failed to bind parameter to statement! "} + sqlite3_errmsg(m_db) };
+}
+
 
 } // namespace HomeServer

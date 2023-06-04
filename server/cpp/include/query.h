@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sqlite3.h>
+#include <optional>
 
 namespace HomeServer
 {
@@ -28,6 +29,17 @@ public:
 	void bind(const int pos, const double val);
 	void bind(const int pos, const std::string& val);
 	void bind(const int pos, const std::string&& val);
+
+	void bind_null(const int pos);
+
+	template<typename T>
+	void bind_nullable(const int pos, const std::optional<T>& opt)
+	{
+		if (opt)
+			bind(pos, opt.value());
+		else
+			bind_null(pos);
+	}
 
 private:
 	std::string m_query_string;

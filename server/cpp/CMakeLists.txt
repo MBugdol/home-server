@@ -27,18 +27,21 @@ set(HOSE_BACKEND_SOURCES
 	
 	"vendor/sqlite/sqlite3.h" "vendor/sqlite/sqlite3.c" 
 	
- "include/user.h"    )
+ "include/user.h"     "include/crypto_utils.h" "src/auth/crypto_utils.cpp"  
+	"src/database/jwttable.cpp" "include/jwttable.h"
+	"src/auth/jwtmanager.cpp" "include/jwtmanager.h" "include/utils.h" "src/utils.cpp")
 
 add_library(HoseBackendLib STATIC ${HOSE_BACKEND_SOURCES})
+target_link_libraries(HoseBackendLib cryptopp::cryptopp nlohmann_json::nlohmann_json)
 target_include_directories(HoseBackendLib 
 	PUBLIC
 		"include" 
 		"vendor/sqlite"
+		"vendor/cryptopp"
 	PRIVATE
 		"src" 
 		#"vendor/asio-1.24.0/include"
 )
-#target_link_libraries(HoseBackendLib cryptopp::cryptopp)
 
 # target compile definitions
 
@@ -58,7 +61,9 @@ find_package(pybind11 REQUIRED)
 pybind11_add_module(HoseBackendPythonModule)
 
 
-target_sources(HoseBackendPythonModule PRIVATE module.cpp)
+target_sources(HoseBackendPythonModule PRIVATE 
+"python_module/authentication.h" "python_module/authentication.cpp"
+"module.cpp")
 target_link_libraries(HoseBackendPythonModule PRIVATE HoseBackendLib)
 
 set_target_properties(HoseBackendPythonModule PROPERTIES 
@@ -82,4 +87,4 @@ target_link_libraries(HoseBackendSandbox PRIVATE HoseBackendLib)
 # Add tests
 #
 
-#add_subdirectory(tests)
+add_subdirectory(tests)

@@ -2,14 +2,17 @@
 
 ## Important
 
-- [X] add sqlite3 support
 - [ ] basic user authentication
 - [ ] file transfer endpoints
 - [ ] endpoint safety
-- [ ] bcrypt for auth
+- [ ] secure query class
+- [ ] secure table requests for nonexistent entries
+- [ ] jwt validation
 
 ## Later date
 - ### Authentication
+	- [ ] one token per IP address
+	- [ ] bcrypt for auth
 	- [ ] OAuth2
 	- [ ] two-factor-auth (physical key, mobile device)
 	- [ ] admin only for physical key bearer

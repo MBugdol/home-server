@@ -1,0 +1,6 @@
+[submodule "server/cpp/vendor/cryptopp"]
+	path = server/cpp/vendor/cryptopp
+	url = https://github.com/abdes/cryptopp-cmake
+[submodule "server/cpp/vendor/json"]
+	path = server/cpp/vendor/json
+	url = https://github.com/nlohmann/json.git
