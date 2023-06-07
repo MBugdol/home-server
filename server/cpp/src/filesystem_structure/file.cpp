@@ -12,11 +12,11 @@ namespace HomeServer
 		debug();
 	}
 
-	//void File::create() const
-	//{
-	//	if (!isValid())
-	//		throw std::invalid_argument{ "Can't create directory outside of server's root!" };
-	//	throw; //unimplemented
-	//}
+	void File::create() const
+	{
+		if (!valid())
+			throw std::invalid_argument{ "InvalidPath" };
+		throw; //unimplemented
+	}
 
 } // namespace HomeServer

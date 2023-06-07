@@ -12,24 +12,24 @@ message(NOTICE "Creating the base library...")
 
 set(HOSE_BACKEND_SOURCES
 	"include/debug.h" 
-	"include/file_access.h" "src/file_access.cpp" 
 	"include/entry.h" "src/filesystem_structure/entry.cpp"
-	"include/directory.h" "src/filesystem_structure/directory.cpp" 
+	"include/folder.h" "src/filesystem_structure/folder.cpp" 
 	"include/file.h" "src/filesystem_structure/file.cpp"
 
 	"include/database.h" "src/database/database.cpp"
 	"include/queryiterator.h" "src/database/queryiterator.cpp"
 	"include/query.h" "src/database/query.cpp"
-	"include/userstable.h" "src/database/userstable.cpp" 
-	"include/concepts.h"
 
-	"include/accountmanager.h" "src/auth/accountmanager.cpp"
+	"include/uploadmanager.h" "src/transfer/uploadmanager.cpp" 
+	"include/uploadtable.h" "src/database/uploadtable.cpp"
+
+	  
+	"include/concepts.h"
 	
 	"vendor/sqlite/sqlite3.h" "vendor/sqlite/sqlite3.c" 
 	
- "include/user.h"     "include/crypto_utils.h" "src/auth/crypto_utils.cpp"  
-	"src/database/jwttable.cpp" "include/jwttable.h"
-	"src/auth/jwtmanager.cpp" "include/jwtmanager.h" "include/utils.h" "src/utils.cpp")
+    "include/crypto_utils.h" "src/auth/crypto_utils.cpp"  
+ "src/filesystem_structure/filemetadata.cpp")
 
 add_library(HoseBackendLib STATIC ${HOSE_BACKEND_SOURCES})
 target_link_libraries(HoseBackendLib cryptopp::cryptopp nlohmann_json::nlohmann_json)
@@ -62,7 +62,7 @@ pybind11_add_module(HoseBackendPythonModule)
 
 
 target_sources(HoseBackendPythonModule PRIVATE 
-"python_module/authentication.h" "python_module/authentication.cpp"
+"python_module/file_transfer.h" "python_module/file_transfer.cpp"
 "module.cpp")
 target_link_libraries(HoseBackendPythonModule PRIVATE HoseBackendLib)
 

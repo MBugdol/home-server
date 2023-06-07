@@ -1,24 +1,19 @@
-from fastapi import FastAPI, HTTPException, status, Request
+from fastapi import FastAPI, HTTPException, status, Request, Response
 import structures as structs
-import mainlogic as logic
 import functools
-
-from backend import FileHandler
 import backend
+
+app = FastAPI()
 
 if __name__ == '__main__':
 	import uvicorn
 	uvicorn.run('main:app', reload = True)
-	
-app = FastAPI()
-
-fh = FileHandler()
 
 def exceptionAs422Details(func):
 	@functools.wraps(func)
 	def exceptionAs422DetailsDecorator(*args, **kwargs):
 		try:
-			func()
+			func(*args, **kwargs)
 		except Exception as e:
 			raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
 	return exceptionAs422DetailsDecorator
@@ -27,26 +22,23 @@ def exceptionAs422Details(func):
 def root():
 	return {'message' : 'Hello world!'}
 
-@app.post('/add-folder/')
-def add_folder(folder: structs.Folder):
-	try:
-		fh.createFolder(folder.directory)
-	except Exception as e:
-		print(e)
-		raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail='The given folder path must be absolute with regard to server root directory')
+@app.post('/init-upload/{path:path}')
+@exceptionAs422Details
+def upload(path: str | None, file: structs.FileInfo, request: Request, response: Response):
+	# get the upload id
+	upload_id = backend.initializeFileTransfer(path, file.name, file.size, file.meta.json())
+	# append upload_id as a query param to the request url
+	location_url = request.url.include_query_params(upload_id = upload_id)
+	response.headers["Location"] = str(location_url)
+
+@app.post('/create/{path:path}')
+@exceptionAs422Details
+def create(path: str, entry: structs.FileInfo):
+	print(f"Endpoint createFolder, args: {path}, {entry.json()}")
+	backend.create(path, entry.name, entry.meta.json())
+
+@app.post('/create/')
+@exceptionAs422Details
+def create(entry: structs.FileInfo):
+	create(entry, "")
 	
-@app.post('/login')
-def login(user: structs.User):
-	if(backend.login(user.login, user.password)):
-		return "Login successful!"
-	raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Invalid login or password")
-
-@app.post('/register', status_code = status.HTTP_201_CREATED)
-def register(user: structs.User):
-	backend.registerUser(user.login, user.password)
-	return "User successfuly registered!"
-
-
-@app.post('/upload/init')
-def initializeFileTransfer():
-	pass

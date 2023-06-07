@@ -1,7 +1,8 @@
 #include <ranges>
 
 #include "entry.h"
-#include "directory.h"
+#include "folder.h"
+#include "file.h"
 #include "debug.h"
 
 namespace HomeServer
@@ -35,15 +36,35 @@ const fs::path Entry::m_server_root_path = getServerRoot();
 //===\
 // STATIC MEMBER FUNCTIONS
 //===/
-Entry::EntryUniquePtr Entry::createEntryFromPath(const std::filesystem::path& path)
+EntryUniquePtr Entry::createEntryFromPath(
+	const std::filesystem::path& path,
+	const Entry::EntryType type)
 {
-	return nullptr;
+	switch (type)
+	{
+	case(Entry::EntryType::File):
+		return std::make_unique<File>(path);
+	case(Entry::EntryType::Folder):
+		return std::make_unique<Folder>(path);
+	default:
+		throw std::runtime_error{"EntryTypeNotDefined"};
+	}
 }
 
 bool Entry::isValid(const std::filesystem::path& path)
 {
-	throw;
+	throw; // todo: ????
 	return false;
+}
+
+bool Entry::exists() const
+{
+	return fs::exists(fullPathNoValidation());
+}
+
+bool Entry::parentDirExists() const
+{
+	return fs::exists(fullPathNoValidation().parent_path());
 }
 
 fs::path Entry::serverRootPath()
@@ -79,7 +100,7 @@ fs::path Entry::path() const
 
 // properties
 
-bool Entry::isValid() const
+bool Entry::valid() const
 {
 	return isContainedInServerRoot();
 }

@@ -3,7 +3,9 @@
 ## Important
 
 - [ ] basic user authentication
-- [ ] file transfer endpoints
+- [ ] file transfer endpoints:
+	[ ] UploadManager
+	[ ] FileMetadata
 - [ ] endpoint safety
 - [ ] secure query class
 - [ ] secure table requests for nonexistent entries
@@ -18,11 +20,13 @@
 	- [ ] admin only for physical key bearer
 
 - ### Functionality
+	- [ ] upload whole folders at once
 	- [ ] music streaming
 	- [ ] video streaming
 	- [ ] text documents streaming
 
 - ### Refactoring
+	- [ ] UploadManager as a class template?
 	- [ ] sqlite3 query builder (another project; refactor related code when the query builder will have been finished)
 	- [ ] add tests
 

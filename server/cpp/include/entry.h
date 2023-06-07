@@ -7,17 +7,33 @@
 namespace HomeServer
 {
 
+class Entry;
+
+typedef std::unique_ptr<Entry> EntryUniquePtr;
+
 class Entry {
-protected:
-	typedef std::unique_ptr<Entry> EntryUniquePtr;
+public: // enums
+	enum class EntryType {
+		File,
+		Folder
+	};
 public:
 	Entry();
 	explicit Entry(const std::filesystem::path& path);
+
+	[[nodiscard]] static EntryUniquePtr createEntryFromPath(
+		const std::filesystem::path& path,
+		const EntryType type
+		);
 	
 	[[nodiscard]] std::filesystem::path path() const;
-	[[nodiscard]] bool isValid() const;
-	[[nodiscard]] virtual std::string json() const = 0;
-	[[nodiscard]] static EntryUniquePtr createEntryFromPath(const std::filesystem::path& path);
+	[[nodiscard]] bool valid() const;
+	[[nodiscard]] bool exists() const;
+	[[nodiscard]] bool parentDirExists() const;
+
+	virtual void create() const = 0;
+
+	
 protected:
 	[[nodiscard]] std::filesystem::path fullPath() const;
 	std::filesystem::path m_path; //< a path relative to server's root

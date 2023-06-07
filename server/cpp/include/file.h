@@ -10,7 +10,7 @@ class File : public Entry
 {
 public:
 	File(const std::filesystem::path& path);
-	//void create() const override;
+	void create() const override;
 private:
 };
 
