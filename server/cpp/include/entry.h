@@ -7,6 +7,17 @@
 namespace HomeServer
 {
 
+namespace EntryError 
+{
+	enum EntryErrorEnum {
+		NoError = 0,
+		InvalidPath,
+		NoParent,
+		AlreadyExists
+	};
+	const char* toString(const EntryErrorEnum e);
+} // namespace EntryError
+
 class Entry;
 
 typedef std::unique_ptr<Entry> EntryUniquePtr;

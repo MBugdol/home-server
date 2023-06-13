@@ -6,7 +6,7 @@
 namespace HomeServer::Python
 {
 
-std::string initilizeFileTransfer(const std::string& path,
+uint64_t initilizeFileTransfer(const std::string& path,
 	const std::string& filename,
 	const uint64_t filesize,
 	const std::string& metadata_json);

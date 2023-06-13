@@ -15,12 +15,13 @@ Folder::Folder(const fs::path& path)
 
 void Folder::create() const
 {
+	using namespace HomeServer::EntryError;
 	if (!valid())
-		throw std::invalid_argument{ "InvalidPath" };
+		throw std::invalid_argument{ toString(InvalidPath) };
 	if (!parentDirExists())
-		throw std::invalid_argument{ "InvalidPath" };
+		throw std::invalid_argument{ toString(NoParent) };
 	if (exists())
-		throw std::runtime_error{ "AlreadyExists" };
+		throw std::runtime_error{ toString(AlreadyExists) };
 
 	fs::create_directory(fullPath());
 }

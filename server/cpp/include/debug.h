@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <iostream>
+#include <iomanip>
 
 static constexpr const char* filename_from_path(const char* path)
 {
@@ -35,6 +36,10 @@ static constexpr const char* short_funct(const char* long_funct)
 class Debug
 {
 public:
+	Debug()
+	{
+		m_out << std::boolalpha;
+	}
 	template<typename T>
 	Debug& operator<<(const T& var)
 	{

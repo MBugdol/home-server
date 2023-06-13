@@ -8,8 +8,8 @@ using namespace HomeServer;
 int main(int argc, char** argv)
 {
 	try {
-		UploadManager um{ File{"123.txt"} };
-		debug() << um.startUpload();
+		UploadManager um{ File{"1234.txt"} };
+		
 	}
 	catch (const std::exception& e)
 	{

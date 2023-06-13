@@ -9,32 +9,29 @@ namespace HomeServer::Python
 
 namespace fs = std::filesystem;
 
-std::string initilizeFileTransfer(const std::string& path,
+uint64_t initilizeFileTransfer(const std::string& path,
 	const std::string& filename,
 	const uint64_t filesize,
 	const std::string& metadata_json)
 {
-	// TODO: create UploadManager and FileMetadata classess
 	// TODO: add this when PermissionManager will have been created
 	//PermissionManager pm;
 	//if(!pm.canWrite(path))
 	//	throw InvalidCredentials("NoWritePermission");
 
-	//// TODO: start here
-	//File target_file{ std::filesystem::path{path} / filename };
-	//if (target_file.exists())
-	//	throw std::runtime_error("AlreadyExists");
+	using namespace EntryError;
+	File target_file{ std::filesystem::path{path} / filename };
+	if (target_file.exists())
+		throw std::runtime_error(toString(AlreadyExists));
 
-	//UploadManager um{ target_file };
-	//if (um.ongoingUpload())
-	//	throw std::runtime_error("UploadInProgress");
+	UploadManager um{ target_file };
+	if (um.uploadStarted())
+		throw std::runtime_error("UploadInProgress");
 
-	// TODO: next up
-	//FileMetadata meta = FileMetadata::fromJson(metadata_json);
-	//um.setMetadata(meta);
-	//return um.startUpload();
-	// or return um.getUploadId();
-	return "0123456789abcdef";
+	FileMetadata meta = FileMetadata::fromJson(metadata_json);
+	um.setMetadata(meta);
+	return um.startUpload();
+	//return "0123456789abcdef";
 }
 
 void create(const std::string& path,

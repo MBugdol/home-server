@@ -3,6 +3,7 @@
 ## Important
 
 - [ ] basic user authentication
+- [ ] error when creating the file fails on the system side
 - [ ] file transfer endpoints:
 	[ ] UploadManager
 	[ ] FileMetadata

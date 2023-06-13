@@ -16,6 +16,7 @@ public:
 	void insertUpload(const std::string& target);
 
 	int getUploadId(const std::string& target);
+	bool uploadExists(const std::string& target);
 private:
 	sqlite3* m_database;
 	Query m_query;

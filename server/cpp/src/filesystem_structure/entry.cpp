@@ -36,6 +36,22 @@ const fs::path Entry::m_server_root_path = getServerRoot();
 //===\
 // STATIC MEMBER FUNCTIONS
 //===/
+
+const char* EntryError::toString(const EntryErrorEnum e)
+{
+	switch (e)
+	{
+	case(NoError):
+		return "NoError";
+	case(InvalidPath):
+		return "InvalidPath";
+	case(NoParent):
+		return "NoParent";
+	case(AlreadyExists):
+		return "AlreadyExists";
+	}
+}
+
 EntryUniquePtr Entry::createEntryFromPath(
 	const std::filesystem::path& path,
 	const Entry::EntryType type)
@@ -125,6 +141,7 @@ fs::path Entry::fullPath() const
 
 bool Entry::isContainedInServerRoot() const
 {
+	// TODO: fix this checking if parent exists
 	namespace ranges = std::ranges;
 	fs::path full_path = fullPathNoValidation();
 	
