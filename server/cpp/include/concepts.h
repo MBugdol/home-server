@@ -7,8 +7,6 @@ namespace HomeServer
 	template<typename T>
 	concept Integral = std::is_integral<T>::value;
 
-	
-
 	template<typename T>
 	concept Integral64 = Integral<T> && (sizeof(T) == 8);
 

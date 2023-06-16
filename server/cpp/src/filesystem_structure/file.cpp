@@ -30,4 +30,23 @@ namespace HomeServer
 			throw std::runtime_error{ "InvalidName" };
 	}
 
+	void File::append(const std::string& data)
+	{
+		using namespace HomeServer::EntryError;
+		if (!valid())
+			throw std::invalid_argument{ toString(InvalidPath) };
+		if (!exists())
+			throw std::runtime_error{ toString(NonExistent) };
+
+		std::ofstream file(fullPath(), std::ios::out | std::ios::binary | std::ios::app);
+		if (!file.is_open())
+			throw std::runtime_error{ "FailedToOpen" };
+		file << data;
+	}
+
+	uint64_t File::size() const
+	{
+		return fs::file_size(fullPath());
+	}
+
 } // namespace HomeServer

@@ -15,6 +15,11 @@ void create(const std::string& path,
 	const std::string& entry_name,
 	const std::string& metadata_json);
 
+void upload(const uint64_t upload_id,
+	uint64_t start_byte,
+	uint64_t end_byte,
+	const std::string& data);
+
 }
 
 #endif // HOSE_PYTHON_FILE_TRANSFER_H

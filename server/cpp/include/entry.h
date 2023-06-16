@@ -13,7 +13,8 @@ namespace EntryError
 		NoError = 0,
 		InvalidPath,
 		NoParent,
-		AlreadyExists
+		AlreadyExists,
+		NonExistent
 	};
 	const char* toString(const EntryErrorEnum e);
 } // namespace EntryError

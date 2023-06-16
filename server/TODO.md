@@ -2,15 +2,21 @@
 
 ## Important
 
-- [ ] basic user authentication
-- [ ] error when creating the file fails on the system side
 - [ ] file transfer endpoints:
-	[ ] UploadManager
-	[ ] FileMetadata
-- [ ] endpoint safety
+	- [ ] /upload/id/ endpoint
+	- [x] UploadManager
+	- [x] FileMetadata
+- [ ] /tree/path/ endpoint
+- [ ] /search/ endpoint
+- [ ] basic user authentication
 - [ ] secure query class
 - [ ] secure table requests for nonexistent entries
-- [ ] jwt validation
+- [ ] bind uploads to users
+
+Libs:
+- [ ] ranges
+- [ ] threads
+- [ ] regex
 
 ## Later date
 - ### Authentication
@@ -33,3 +39,8 @@
 
 - ### Bachelors expansion
 	- [ ] branch off into online music analysis
+
+## Finished
+
+- [x] error when creating the file fails on the system side
+- [x] filesystem

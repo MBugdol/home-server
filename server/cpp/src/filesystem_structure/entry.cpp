@@ -49,6 +49,8 @@ const char* EntryError::toString(const EntryErrorEnum e)
 		return "NoParent";
 	case(AlreadyExists):
 		return "AlreadyExists";
+	case(NonExistent):
+		return "NonExistent";
 	}
 }
 

@@ -3,6 +3,7 @@
 #include <file.h>
 #include <uploadmanager.h>
 #include <filemetadata.h>
+#include <debug.h>
 
 namespace HomeServer::Python
 {
@@ -30,8 +31,40 @@ uint64_t initilizeFileTransfer(const std::string& path,
 
 	FileMetadata meta = FileMetadata::fromJson(metadata_json);
 	um.setMetadata(meta);
+	um.setSize(filesize);
 	return um.startUpload();
-	//return "0123456789abcdef";
+}
+
+void upload(const uint64_t upload_id,
+	uint64_t start_byte,
+	uint64_t end_byte,
+	const std::string& data)
+{
+	// create UM with the upload_id
+	UploadManager um = UploadManager::fromId(upload_id);
+
+	// TODO: add this when PermissionManager will have been created
+	//PermissionManager pm;
+	//if(!pm.canWrite(path))
+	//	throw InvalidCredentials("NoPermission");
+
+	if (!um.uploadStarted())
+		throw std::runtime_error("NoUpload");
+
+	// check if bytes are correct
+	File target = um.file();
+
+	if (start_byte != target.size() ||
+		end_byte > um.filesize() - 1)
+		throw std::runtime_error("InvalidRange");
+
+	uint64_t range_size = end_byte - start_byte + 1;
+	if (range_size != data.size())
+		throw std::runtime_error("SizeMismatch");
+
+	target.append(data);
+	if (target.size() == um.filesize())
+		um.completeUpload();
 }
 
 void create(const std::string& path,

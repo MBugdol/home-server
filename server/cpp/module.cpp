@@ -10,4 +10,5 @@ PYBIND11_MODULE(backend, m) {
 	m.doc() = "The HomeServer backend module";
 	m.def("initializeFileTransfer", HosePy::initilizeFileTransfer);
 	m.def("create", HosePy::create);
+	m.def("upload", HosePy::upload);
 }
