@@ -2,7 +2,7 @@
 
 ## Important
 
-- [ ] /search/ endpoint
+- [ ] /download/path endpoint
 - [ ] basic user authentication
 - [ ] secure query class
 - [ ] secure table requests for nonexistent entries
@@ -11,7 +11,6 @@
 
 Libs:
 - [ ] threads (async in PY)
-- [ ] regex
 
 ## Later date
 - ### Authentication
@@ -31,6 +30,7 @@ Libs:
 	- [ ] UploadManager as a class template?
 	- [ ] sqlite3 query builder (another project; refactor related code when the query builder will have been finished)
 	- [ ] add tests
+	- [ ] EntryList class
 
 - ### Bachelors expansion
 	- [ ] branch off into online music analysis
@@ -43,6 +43,7 @@ Libs:
 	- [x] /upload/id/ endpoint
 	- [x] UploadManager
 	- [x] FileMetadata
-
 - [x] /tree/path/ endpoint
 - [x] ranges
+- [x] /search/ endpoint
+- [x] regex

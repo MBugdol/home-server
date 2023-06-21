@@ -74,7 +74,18 @@ def create(entry: structs.FileInfo):
 @exceptionAs422Details
 def tree(path: str):
 	return json.loads(backend.list(path))
+
 @app.get('/tree/')
 @exceptionAs422Details
 def tree():
 	return tree("")
+
+@app.post('/search/{path:path}')
+@exceptionAs422Details
+def search(path: str, phrase: str):
+	return json.loads(backend.search(path, phrase))
+
+@app.post('/search/')
+@exceptionAs422Details
+def search(phrase: str):
+	return search("", phrase)

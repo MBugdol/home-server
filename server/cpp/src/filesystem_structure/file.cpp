@@ -58,4 +58,9 @@ nlohmann::json File::json() const
 	return json;
 }
 
+Entry::EntryType File::type() const
+{
+	return EntryType::File;
+}
+
 } // namespace HomeServer

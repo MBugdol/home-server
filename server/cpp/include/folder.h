@@ -15,10 +15,13 @@ public:
 	Folder(const std::filesystem::path& path);
 	void create() const override;
 	std::string name() const;
+	EntryType type() const override;
+
 	nlohmann::json json() const override;
 	nlohmann::json jsonWithChildren() const;
 
 	std::vector<std::unique_ptr<Entry>> children() const;
+	std::vector<std::unique_ptr<Entry>> searchFor(const std::string& phrase) const;
 private:
 };
 

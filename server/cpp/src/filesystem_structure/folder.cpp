@@ -1,4 +1,7 @@
 #include <folder.h>
+
+#include <regex>
+
 #include <debug.h>
 
 namespace HomeServer
@@ -46,6 +49,11 @@ nlohmann::json Folder::json() const
 	return json;
 }
 
+Entry::EntryType Folder::type() const
+{
+	return EntryType::Folder;
+}
+
 nlohmann::json Folder::jsonWithChildren() const
 {
 	nlohmann::json json = Folder::json();
@@ -57,22 +65,37 @@ nlohmann::json Folder::jsonWithChildren() const
 	return json;
 }
 
+std::vector<std::unique_ptr<Entry>> Folder::searchFor(const std::string& phrase) const
+{
+	if (!valid())
+		throw std::runtime_error(EntryError::toString(EntryError::InvalidPath));
+	if (!exists())
+		throw std::runtime_error(EntryError::toString(EntryError::NonExistent));
+
+	const std::regex search_regex{ R"(.*)" + phrase + R"(.*)" };
+	std::vector<std::unique_ptr<Entry>> result;
+	for (auto entry : fs::recursive_directory_iterator{ fullPath() })
+	{
+		if (!std::regex_match(entry.path().filename().string(), search_regex))
+			continue;
+		fs::path relpath = fs::relative(entry.path(), serverRootPath());
+		if (entry.is_directory())
+			result.push_back(Entry::createEntryFromPath(relpath, Entry::EntryType::Folder));
+		else
+			result.push_back(Entry::createEntryFromPath(relpath, Entry::EntryType::File));
+	}
+	return result;
+}
 
 std::vector<std::unique_ptr<Entry>> Folder::children() const
 {
-	if (!valid()) {
+	if (!valid())
 		throw std::runtime_error(EntryError::toString(EntryError::InvalidPath));
-	}
 	if (!exists())
-	{
 		throw std::runtime_error(EntryError::toString(EntryError::NonExistent));
-	}
 	
 	auto transformer = [&, this](const fs::directory_entry& e) -> std::unique_ptr<Entry> {
-		//assumes the given entry exists
-		assert(e.exists());
 		fs::path relpath = fs::relative(e.path(), serverRootPath());
-		debug() << relpath;
 		if (e.is_directory())
 			return Entry::createEntryFromPath(relpath, Entry::EntryType::Folder);
 		else
