@@ -14,10 +14,10 @@ ApplicationWindow {
 	}
 	Connections {
 		target: FlowController
-		function onPushRequest (arg) { menuStack.push(arg) }
+		function onPushRequest (page, args = {}) { menuStack.push(page, args) }
 		function onSwitchRequest (arg) { menuStack.replace(arg) }
 		function onPopRequest () { menuStack.pop() }
 	}
 
-	Component.onCompleted: FlowController.push("boot/bootpage.qml")
+	Component.onCompleted: FlowController.push("qrc:/boot/bootpage.qml")
 } //root 

@@ -8,16 +8,25 @@ Page {
 	id: root
 	background: Rectangle {color: Material.backgroundColor}
 	header: ToolBar {
-		Row {
+		RowLayout {
 			anchors.fill: parent
-			ToolButton {
-				text: "Test1"
+			spacing: 5
+			Label {
+				id: cwdLabel
+				Layout.maximumWidth: 0.4 * parent.width
+				text: Backend.getCwd()
+				elide: Text.ElideRight
+				Connections {
+					target: Backend
+					function onCwdChanged() {cwdLabel.text = Backend.getCwd()}
+				}
 			}
-			ToolButton {
-				text: "Test2"
-			}
-			Switch {
-
+			TextField {
+				Layout.minimumWidth: 0.2 * parent.width
+				Layout.fillWidth: true
+				placeholderText: "Search in this folder..."
+				clip: true
+				onAccepted: Backend.searchFor(text)
 			}
 		}
 	
@@ -45,14 +54,23 @@ Page {
 			}
 			Repeater {
 				id: foldersRepeater
-				//todo: create a nice model
-				// qjsonobject
-				// with name and type
-				model: Backend.getCurrentChildren()
+				function setModel(new_model)
+				{
+					let model_begin = [
+						{
+							"name": "..",
+							"type": "cdup"
+						}
+					]
+					foldersRepeater.model = model_begin.concat(new_model)
+				}
+				Component.onCompleted: {setModel(Backend.getCurrentChildren())}
 				GridTile {
 					onClicked: {
-						if(modelData.type !== "directory") return
-						Backend.cd(modelData.name)
+						if(modelData.type == "directory")
+							Backend.cd(modelData.name)
+						else if(modelData.type == "cdup")
+							Backend.cdUp()
 
 					}
 					text: modelData.name
@@ -70,7 +88,7 @@ Page {
 			Connections {
 				target: Backend
 				function onCwdChanged() {
-					foldersRepeater.model = Backend.getCurrentChildren()
+					foldersRepeater.setModel(Backend.getCurrentChildren())
 				}
 			}
 		}

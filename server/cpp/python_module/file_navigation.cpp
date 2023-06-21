@@ -42,11 +42,11 @@ std::string search(const std::string& path,
 		throw std::runtime_error{ EntryError::toString(EntryError::NonExistent) };
 
 	std::vector<std::unique_ptr<Entry>> matches = working_dir.searchFor(phrase);
-	std::vector<std::string> matches_paths;
+	std::vector<nlohmann::json> matches_jsons;
 	for (const auto& e : matches)
-		matches_paths.push_back(e->path().string());
+		matches_jsons.push_back(e->json());
 	nlohmann::json result = {
-		{"matches", matches_paths}
+		{"matches", matches_jsons}
 	};
 	return result.dump();
 }

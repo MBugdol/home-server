@@ -4,7 +4,6 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQuickControls2 import QQuickStyle
 
-import app.flow as flow
 import app.logic as logic
 
 def exec():
@@ -12,11 +11,13 @@ def exec():
 	QQuickStyle.setStyle("Material")
 	engine = QQmlApplicationEngine()
 
-	flow_controller = flow.FlowController()
-	engine.rootContext().setContextProperty("FlowController", flow_controller)
 
 	backend = logic.Backend()
+	
 	engine.rootContext().setContextProperty("Backend", backend)
+	engine.rootContext().setContextProperty("FlowController", backend.FlowController)
+
+	
 
 	main_qml = QDir(__file__)
 	main_qml.cd('../../gui')
