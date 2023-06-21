@@ -44,19 +44,33 @@ Page {
 				
 			}
 			Repeater {
-				model: 2000
+				id: foldersRepeater
+				//todo: create a nice model
+				// qjsonobject
+				// with name and type
+				model: Backend.getCurrentChildren()
 				GridTile {
-					onClicked: console.log("I'm item no. " + index)
-					text: index
+					onClicked: {
+						if(modelData.type !== "directory") return
+						Backend.cd(modelData.name)
+
+					}
+					text: modelData.name
 					Image {
 						anchors.centerIn: parent
 						width: 0.8 * parent.width
 						height: 0.8 * parent.width
 						sourceSize.width: width
 						sourceSize.height: height
-						source: Math.random() < 0.5 ? "../res/img/folder-icon.svg" : "../res/img/file-icon.svg" // add main.qml to qrc?
+						source: modelData.type === "directory" ? "../res/img/folder-icon.svg" : "../res/img/file-icon.svg" // add main.qml to qrc?
 						fillMode: Image.PreserveAspectFit
 					}
+				}
+			}
+			Connections {
+				target: Backend
+				function onCwdChanged() {
+					foldersRepeater.model = Backend.getCurrentChildren()
 				}
 			}
 		}

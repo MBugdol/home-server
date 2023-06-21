@@ -15,8 +15,8 @@ def exec():
 	flow_controller = flow.FlowController()
 	engine.rootContext().setContextProperty("FlowController", flow_controller)
 
-	api_caller = logic.APICaller()
-	engine.rootContext().setContextProperty("APICaller", api_caller)
+	backend = logic.Backend()
+	engine.rootContext().setContextProperty("Backend", backend)
 
 	main_qml = QDir(__file__)
 	main_qml.cd('../../gui')
