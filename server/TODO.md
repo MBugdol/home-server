@@ -4,13 +4,13 @@
 
 - [ ] /download/path endpoint
 - [ ] basic user authentication
-- [ ] secure query class
+- [~] secure query class
 - [ ] secure table requests for nonexistent entries
 - [ ] bind uploads to users
 - [ ] server initializer class
 
 Libs:
-- [ ] threads (async in PY)
+- [!] threads (async in PY)
 
 ## Later date
 - ### Authentication

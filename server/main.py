@@ -23,6 +23,60 @@ def exceptionAs422Details(func):
 def root():
 	return {'message' : 'Hello world!'}
 
+@app.get('/tree/{path:path}')
+@exceptionAs422Details
+def tree(path: str):
+	return json.loads(backend.list(path))
+
+@app.get('/tree/')
+@exceptionAs422Details
+def tree():
+	return tree("")
+
+@app.post('/search/{path:path}')
+@exceptionAs422Details
+def search(path: str, phrase: str):
+	return json.loads(backend.search(path, phrase))
+
+@app.post('/search/')
+@exceptionAs422Details
+def search(phrase: str):
+	return search("", phrase)
+
+@app.post('/create/{path:path}')
+@exceptionAs422Details
+def create(path: str, entry: structs.FileInfo):
+	print(f"Endpoint create, args: {path}, {entry.json()}")
+	backend.create(path, entry.name, entry.meta.json())
+
+@app.post('/create/')
+@exceptionAs422Details
+def create(entry: structs.FileInfo):
+	return create("", entry)
+
+@app.get('/download/{path:path}')
+@exceptionAs422Details
+def download(path: str):
+	pass
+
+@app.get('/download/')
+@exceptionAs422Details
+def download():
+	return download("")
+
+@app.post('/init-upload/{path:path}')
+@exceptionAs422Details
+def initUpload(path: str | None, file: structs.FileInfo, request: Request, response: Response):
+	# get the upload id
+	upload_id = backend.initializeFileTransfer(path, file.name, file.size, file.meta.json())
+	# append upload_id as a query param to the request url
+	location_url = str(request.base_url) + "/upload/" + str(upload_id)
+	response.headers["Location"] = location_url
+
+@app.post('/init-upload/')
+@exceptionAs422Details
+def initUpload(file: structs.FileInfo, request: Request, response: Response):
+	return initUpload("", file, request, response)
 
 @app.put('/upload/{id}')
 @exceptionAs422Details
@@ -44,48 +98,3 @@ def upload(file: UploadFile, id: int):
 		 bytes_sent + data_size - 1,
 		 data)
 		bytes_sent += data_size
-
-@app.post('/init-upload/{path:path}')
-@exceptionAs422Details
-def initUpload(path: str | None, file: structs.FileInfo, request: Request, response: Response):
-	# get the upload id
-	upload_id = backend.initializeFileTransfer(path, file.name, file.size, file.meta.json())
-	# append upload_id as a query param to the request url
-	location_url = str(request.base_url) + "/upload/" + str(upload_id)
-	response.headers["Location"] = location_url
-
-@app.post('/init-upload/')
-@exceptionAs422Details
-def initUpload(file: structs.FileInfo, request: Request, response: Response):
-	return initUpload("", file, request, response)
-
-@app.post('/create/{path:path}')
-@exceptionAs422Details
-def create(path: str, entry: structs.FileInfo):
-	print(f"Endpoint create, args: {path}, {entry.json()}")
-	backend.create(path, entry.name, entry.meta.json())
-
-@app.post('/create/')
-@exceptionAs422Details
-def create(entry: structs.FileInfo):
-	return create("", entry)
-
-@app.get('/tree/{path:path}')
-@exceptionAs422Details
-def tree(path: str):
-	return json.loads(backend.list(path))
-
-@app.get('/tree/')
-@exceptionAs422Details
-def tree():
-	return tree("")
-
-@app.post('/search/{path:path}')
-@exceptionAs422Details
-def search(path: str, phrase: str):
-	return json.loads(backend.search(path, phrase))
-
-@app.post('/search/')
-@exceptionAs422Details
-def search(phrase: str):
-	return search("", phrase)
