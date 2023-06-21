@@ -2,20 +2,15 @@
 
 ## Important
 
-- [ ] file transfer endpoints:
-	- [ ] /upload/id/ endpoint
-	- [x] UploadManager
-	- [x] FileMetadata
-- [ ] /tree/path/ endpoint
 - [ ] /search/ endpoint
 - [ ] basic user authentication
 - [ ] secure query class
 - [ ] secure table requests for nonexistent entries
 - [ ] bind uploads to users
+- [ ] server initializer class
 
 Libs:
-- [ ] ranges
-- [ ] threads
+- [ ] threads (async in PY)
 - [ ] regex
 
 ## Later date
@@ -44,3 +39,10 @@ Libs:
 
 - [x] error when creating the file fails on the system side
 - [x] filesystem
+- [x] file transfer endpoints:
+	- [x] /upload/id/ endpoint
+	- [x] UploadManager
+	- [x] FileMetadata
+
+- [x] /tree/path/ endpoint
+- [x] ranges

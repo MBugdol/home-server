@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, status, Request, Response, UploadFil
 import structures as structs
 import functools
 import backend
+import json
 
 app = FastAPI()
 
@@ -68,3 +69,12 @@ def create(path: str, entry: structs.FileInfo):
 @exceptionAs422Details
 def create(entry: structs.FileInfo):
 	return create("", entry)
+
+@app.get('/tree/{path:path}')
+@exceptionAs422Details
+def tree(path: str):
+	return json.loads(backend.list(path))
+@app.get('/tree/')
+@exceptionAs422Details
+def tree():
+	return tree("")

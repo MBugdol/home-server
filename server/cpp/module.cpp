@@ -1,6 +1,7 @@
 #include <pybind11/pybind11.h>
 
 #include "python_module/file_transfer.h"
+#include "python_module/file_navigation.h"
 
 namespace py = pybind11;
 
@@ -11,4 +12,5 @@ PYBIND11_MODULE(backend, m) {
 	m.def("initializeFileTransfer", HosePy::initilizeFileTransfer);
 	m.def("create", HosePy::create);
 	m.def("upload", HosePy::upload);
+	m.def("list", HosePy::list);
 }

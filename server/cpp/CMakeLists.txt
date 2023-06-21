@@ -63,7 +63,8 @@ pybind11_add_module(HoseBackendPythonModule)
 
 target_sources(HoseBackendPythonModule PRIVATE 
 "python_module/file_transfer.h" "python_module/file_transfer.cpp"
-"module.cpp")
+"python_module/file_navigation.h" "python_module/file_navigation.cpp"
+"module.cpp" )
 target_link_libraries(HoseBackendPythonModule PRIVATE HoseBackendLib)
 
 set_target_properties(HoseBackendPythonModule PROPERTIES 

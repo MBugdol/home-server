@@ -1,15 +1,17 @@
 #include <debug.h>
+#include <filesystem>
+#include <ranges>
 
-#include <uploadmanager.h>
+#include <folder.h>
 
 using namespace HomeServer;
-
+namespace fs = std::filesystem;
 
 int main(int argc, char** argv)
 {
 	try {
-		UploadManager um{ File{"1234.txt"} };
-		
+		Folder f{ " " };
+		debug() << f.jsonWithChildren();
 	}
 	catch (const std::exception& e)
 	{

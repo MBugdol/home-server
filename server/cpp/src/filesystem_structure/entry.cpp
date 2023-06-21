@@ -25,7 +25,7 @@ const fs::path getServerRoot()
 	server_root_path = fs::weakly_canonical(server_root_path);
 	debug() << "Server root path:" << server_root_path;
 
-	//TODO: MOVE ASAP
+	//TODO: move
 	if (!fs::exists(server_root_path)) 
 		fs::create_directories(server_root_path);
 
@@ -69,25 +69,33 @@ EntryUniquePtr Entry::createEntryFromPath(
 	}
 }
 
-bool Entry::isValid(const std::filesystem::path& path)
-{
-	throw; // todo: ????
-	return false;
-}
-
 bool Entry::exists() const
 {
-	return fs::exists(fullPathNoValidation());
+	return exists(m_path);
 }
 
 bool Entry::parentDirExists() const
 {
-	return fs::exists(fullPathNoValidation().parent_path());
+	return parentDirExists(m_path);
 }
 
 fs::path Entry::serverRootPath()
 {
 	return m_server_root_path;
+}
+
+bool Entry::valid(const std::filesystem::path& path)
+{
+	return isContainedInServerRoot(path);
+}
+bool Entry::exists(const std::filesystem::path& path)
+{
+	return fs::exists(m_server_root_path / path);
+}
+
+bool Entry::parentDirExists(const std::filesystem::path& path)
+{
+	return fs::exists(( m_server_root_path / path ).parent_path());
 }
 
 //===\
@@ -120,8 +128,17 @@ fs::path Entry::path() const
 
 bool Entry::valid() const
 {
-	return isContainedInServerRoot();
+	return valid(m_path);
 }
+
+nlohmann::json Entry::json() const
+{
+	nlohmann::json j = {
+		{"path", path().string()}
+	};
+	return j;
+}
+
 
 //==\
 // PRIVATE MEMBER FUNCTIONS
@@ -143,31 +160,27 @@ fs::path Entry::fullPath() const
 
 bool Entry::isContainedInServerRoot() const
 {
-	// TODO: fix this checking if parent exists
-	namespace ranges = std::ranges;
-	fs::path full_path = fullPathNoValidation();
-	
-	// Two conditions must be satisfied for one directory (input) to be contained in another one (root):
-	// 1. Input must be longer folder-wise than root
-	// 2. Input must contain root at the beginning
-	
-	fs::path::const_iterator root_it = m_server_root_path.begin();
-	fs::path::const_iterator full_it = full_path.begin();
+	return isContainedInServerRoot(m_path);
+}
 
-	// C++23's ZipView would be really handy here
-	while (root_it != m_server_root_path.end() && full_it != full_path.end())
+bool Entry::isContainedInServerRoot(const std::filesystem::path& path)
+{
+	debug() << "Checking path" << path;
+	if (path.is_absolute())
 	{
-		// compare content
-		if (*root_it != *full_it)
-			return false;
-
-		// check if full is shorter than/same size as root
-		if (++full_it == full_path.end())
-			return false;
-
-		++root_it;
+		debug() << "Path can't be absolute!";
+		return false;
 	}
-	// all comparisons succeeded and root is longer than full
+
+	fs::path full_path = (m_server_root_path / path).lexically_normal();
+	fs::path relative = full_path.lexically_relative(m_server_root_path);
+	bool is_contained = std::ranges::none_of(relative, [](const fs::path& path) {return path == ".."; });
+	if (!is_contained)
+	{
+		debug() << "Path escapes the server root!";
+		return false;
+	}
+	debug() << "All good!";
 	return true;
 }
 

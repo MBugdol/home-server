@@ -11,6 +11,7 @@ class File : public Entry
 public:
 	File(const std::filesystem::path& path);
 	void create() const override;
+	nlohmann::json json() const override;
 	void append(const std::string& data);
 	uint64_t size() const;
 private:

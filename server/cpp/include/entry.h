@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <string>
 #include <memory>
+#include <nlohmann/json.hpp>
 
 namespace HomeServer
 {
@@ -44,16 +45,19 @@ public:
 	[[nodiscard]] bool parentDirExists() const;
 
 	virtual void create() const = 0;
+	virtual nlohmann::json json() const;
 
-	
+	static bool valid(const std::filesystem::path& path);
+	static bool exists(const std::filesystem::path& path);
+	static bool parentDirExists(const std::filesystem::path& path);
 protected:
 	[[nodiscard]] std::filesystem::path fullPath() const;
 	std::filesystem::path m_path; //< a path relative to server's root
-private:
-	[[nodiscard]] static bool isValid(const std::filesystem::path& path);
 	[[nodiscard]] static std::filesystem::path serverRootPath();
+private:
 	[[nodiscard]] inline std::filesystem::path fullPathNoValidation() const noexcept;
 	[[nodiscard]] bool isContainedInServerRoot() const;
+	[[nodiscard]] static bool isContainedInServerRoot(const std::filesystem::path& path);
 private:
 	static const std::filesystem::path m_server_root_path; //< server's installation directory
 };
