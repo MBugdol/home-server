@@ -45,6 +45,7 @@ public:
 	[[nodiscard]] bool parentDirExists() const;
 
 	virtual void create() const = 0;
+	virtual void rename(const std::string& new_name) const;
 	virtual void remove() const = 0;
 	virtual EntryType type() const = 0;
 	virtual nlohmann::json json() const;

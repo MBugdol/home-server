@@ -84,6 +84,21 @@ fs::path Entry::serverRootPath()
 	return m_server_root_path;
 }
 
+void Entry::rename(const std::string& new_name) const
+{
+	using namespace EntryError;
+	if (!exists())
+		throw std::runtime_error(toString(NonExistent));
+	fs::path new_path = m_path.parent_path() / new_name;
+	if (!valid(new_path))
+		throw std::runtime_error(toString(InvalidPath));
+	if(exists(new_path))
+		throw std::runtime_error(toString(AlreadyExists));
+
+	fs::rename(fullPath(), m_server_root_path / new_path);
+}
+
+
 bool Entry::valid(const std::filesystem::path& path)
 {
 	return isContainedInServerRoot(path);

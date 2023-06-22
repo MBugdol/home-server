@@ -2,8 +2,7 @@
 
 ## Important
 
-- [!] /delete/<path> endpoint
-- [ ] /rename/<path> endpoint
+- [!] /rename/<path> endpoint
 - [ ] /download/path endpoint
 - [ ] create new folder - fix name collisions
 - [ ] threads (async in PY)
@@ -51,3 +50,4 @@ Libs:
 - [x] ranges
 - [x] /search/ endpoint
 - [x] regex
+- [x] /delete/<path> endpoint

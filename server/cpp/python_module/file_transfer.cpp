@@ -91,6 +91,28 @@ void create(const std::string& path,
 	new_entry->create();
 }
 
+void rename(const std::string& path,
+	const std::string& new_name)
+{
+	// TODO: add this when PermissionManager will have been created
+	//PermissionManager pm;
+	//if(!pm.canWrite(path))
+	//	throw InvalidCredentials("NoWritePermission");
+	if (!Entry::valid(path))
+		throw std::runtime_error(EntryError::toString(EntryError::InvalidPath));
+
+	if (!Entry::exists(path))
+		throw std::runtime_error(EntryError::toString(EntryError::NonExistent));
+
+	fs::path new_path = fs::path{ path }.parent_path() / new_name;
+	if (Entry::exists(new_path))
+		throw std::runtime_error(EntryError::toString(EntryError::AlreadyExists));
+
+	Entry::EntryType type = Entry::type(path);
+	std::unique_ptr<Entry> entry = Entry::createEntryFromPath(path, type);
+	entry->rename(new_name);
+}
+
 void remove(const std::string& path)
 {
 	// TODO: add this when PermissionManager will have been created

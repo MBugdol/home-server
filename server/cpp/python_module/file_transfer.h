@@ -20,6 +20,9 @@ void upload(const uint64_t upload_id,
 	uint64_t end_byte,
 	const std::string& data);
 
+void rename(const std::string& path,
+	const std::string& new_name);
+
 void remove(const std::string& path);
 
 }
