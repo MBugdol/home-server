@@ -14,4 +14,5 @@ PYBIND11_MODULE(backend, m) {
 	m.def("upload", HosePy::upload);
 	m.def("list", HosePy::list);
 	m.def("search", HosePy::search);
+	m.def("remove", HosePy::remove);
 }

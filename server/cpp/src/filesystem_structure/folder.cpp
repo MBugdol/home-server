@@ -29,6 +29,17 @@ void Folder::create() const
 	fs::create_directory(fullPath());
 }
 
+void Folder::remove() const
+{
+	using namespace HomeServer::EntryError;
+	if(!valid())
+		throw std::invalid_argument{ toString(InvalidPath) };
+	if (!exists())
+		throw std::runtime_error{ toString(NonExistent) };
+
+	fs::remove_all(fullPath());
+}
+
 std::string Folder::name() const
 {
 	if (m_path.has_filename()) // ex. "qwe/123"

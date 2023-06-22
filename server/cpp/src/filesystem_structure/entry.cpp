@@ -138,7 +138,12 @@ nlohmann::json Entry::json() const
 	};
 	return j;
 }
-
+Entry::EntryType Entry::type(const std::filesystem::path& path)
+{
+	if (fs::is_directory(m_server_root_path / path))
+		return EntryType::Folder;
+	return EntryType::File;
+}
 
 //==\
 // PRIVATE MEMBER FUNCTIONS

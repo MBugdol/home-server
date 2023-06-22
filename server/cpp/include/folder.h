@@ -14,6 +14,7 @@ class Folder : public Entry
 public:
 	Folder(const std::filesystem::path& path);
 	void create() const override;
+	void remove() const override;
 	std::string name() const;
 	EntryType type() const override;
 

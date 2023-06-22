@@ -2,10 +2,12 @@
 
 ## Important
 
-- [ ] /download/path endpoint
-- [ ] /delete/<path> endpoint
+- [!] /delete/<path> endpoint
 - [ ] /rename/<path> endpoint
+- [ ] /download/path endpoint
 - [ ] create new folder - fix name collisions
+- [ ] threads (async in PY)
+
 - [ ] basic user authentication
 - [~] secure query class
 - [ ] secure table requests for nonexistent entries
@@ -13,7 +15,6 @@
 - [ ] server initializer class
 
 Libs:
-- [!] threads (async in PY)
 
 ## Later date
 - ### Authentication

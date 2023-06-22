@@ -30,6 +30,17 @@ void File::create() const
 		throw std::runtime_error{ "InvalidName" };
 }
 
+void File::remove() const
+{
+	using namespace HomeServer::EntryError;
+	if (!valid())
+		throw std::invalid_argument{ toString(InvalidPath) };
+	if (!exists())
+		throw std::invalid_argument{ toString(NonExistent) };
+
+	fs::remove(fullPath());
+}
+
 void File::append(const std::string& data)
 {
 	using namespace HomeServer::EntryError;

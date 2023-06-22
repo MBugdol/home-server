@@ -45,12 +45,14 @@ public:
 	[[nodiscard]] bool parentDirExists() const;
 
 	virtual void create() const = 0;
+	virtual void remove() const = 0;
 	virtual EntryType type() const = 0;
 	virtual nlohmann::json json() const;
 
 	static bool valid(const std::filesystem::path& path);
 	static bool exists(const std::filesystem::path& path);
 	static bool parentDirExists(const std::filesystem::path& path);
+	static EntryType type(const std::filesystem::path& path);
 protected:
 	[[nodiscard]] std::filesystem::path fullPath() const;
 	std::filesystem::path m_path; //< a path relative to server's root

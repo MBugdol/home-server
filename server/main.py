@@ -54,6 +54,11 @@ def create(path: str, entry: structs.FileInfo):
 def create(entry: structs.FileInfo):
 	return create("", entry)
 
+@app.delete('/delete/{path:path}')
+@exceptionAs422Details
+def delete(path: str):
+	backend.remove(path)
+
 @app.get('/download/{path:path}')
 @exceptionAs422Details
 def download(path: str):

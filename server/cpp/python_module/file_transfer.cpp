@@ -91,4 +91,20 @@ void create(const std::string& path,
 	new_entry->create();
 }
 
+void remove(const std::string& path)
+{
+	// TODO: add this when PermissionManager will have been created
+	//PermissionManager pm;
+	//if(!pm.canWrite(path))
+	//	throw InvalidCredentials("NoWritePermission");
+
+	if (!Entry::exists(path))
+		throw std::runtime_error(EntryError::toString(EntryError::NonExistent));
+
+	Entry::EntryType type = Entry::type(path);
+	std::unique_ptr<Entry> entry = Entry::createEntryFromPath(path, type);
+	entry->remove();
+}
+
+
 }
