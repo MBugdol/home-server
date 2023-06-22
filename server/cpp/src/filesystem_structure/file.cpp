@@ -45,7 +45,6 @@ void File::remove() const
 std::string File::read(const uint64_t start,
 	const uint64_t end)
 {
-	debug() << "Reading bytes " << start << " thru" << end;
 	using namespace HomeServer::EntryError;
 	if (!valid())
 		throw std::invalid_argument{ toString(InvalidPath) };
@@ -59,10 +58,14 @@ std::string File::read(const uint64_t start,
 
 	std::string bytes;
 	if (end == -1) {
-		std::ranges::copy(std::ranges::istream_view<uint8_t>(file), std::back_inserter(bytes));
+		std::copy(std::istreambuf_iterator<char>(file), 
+			std::istreambuf_iterator<char>(), 
+			std::back_inserter(bytes));
 	}
 	else {
-		std::ranges::copy(std::ranges::istream_view<char>(file) | std::views::take(end-start + 1), std::back_inserter(bytes));
+		bytes = std::string(1024 * 256, '\0');
+		file.read(&bytes[0], 1024 * 256);
+		bytes.resize(file.gcount());
 	}
 	return bytes;
 }
