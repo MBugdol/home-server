@@ -14,6 +14,8 @@ public:
 	void remove() const override;
 	nlohmann::json json() const override;
 	EntryType type() const override;
+	std::string read(const uint64_t start,
+		const uint64_t end);
 	void append(const std::string& data);
 	uint64_t size() const;
 private:

@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, status, Request, Response, UploadFile
+from fastapi.responses import StreamingResponse
 import structures as structs
 import functools
 import backend
@@ -22,6 +23,11 @@ def exceptionAs422Details(func):
 @app.get('/')
 def root():
 	return {'message' : 'Hello world!'}
+
+@app.get('/info/{path:path}')
+@exceptionAs422Details
+def info(path: str):
+	return json.loads(backend.info(path))
 
 @app.get('/tree/{path:path}')
 @exceptionAs422Details
@@ -69,15 +75,6 @@ def move(path: str, to: str):
 def delete(path: str):
 	backend.remove(path)
 
-@app.get('/download/{path:path}')
-@exceptionAs422Details
-def download(path: str):
-	pass
-
-@app.get('/download/')
-@exceptionAs422Details
-def download():
-	return download("")
 
 @app.post('/init-upload/{path:path}')
 @exceptionAs422Details
@@ -113,3 +110,23 @@ def upload(file: UploadFile, id: int):
 		 bytes_sent + data_size - 1,
 		 data)
 		bytes_sent += data_size
+
+@app.get('/download/{path:path}')
+@exceptionAs422Details
+def download(path: str) -> bytes:
+	chunk_size = 256 * 1024
+	file = json.loads(backend.info(path))
+	if(file['type'] != 'file'):
+		raise Exception('NotAFile')
+	filesize = int(file['size'])
+
+	def file_streamer():
+		for i in range(chunk_size, filesize, chunk_size):
+			yield backend.read(path, i-chunk_size, i - 1)
+		remaining_bytes = filesize % chunk_size
+		if(remaining_bytes != 0):
+			startbyte = filesize - remaining_bytes
+			yield backend.read(path, startbyte)
+	
+	return StreamingResponse(file_streamer())
+

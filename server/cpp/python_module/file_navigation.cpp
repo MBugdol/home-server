@@ -51,4 +51,16 @@ std::string search(const std::string& path,
 	return result.dump();
 }
 
+std::string info(const std::string& path)
+{
+	if (!Entry::valid(path))
+		throw std::runtime_error{ EntryError::toString(EntryError::InvalidPath) };
+	if (!Entry::exists(path))
+		throw std::runtime_error{ EntryError::toString(EntryError::NonExistent) };
+
+	Entry::EntryType type = Entry::type(path);
+	std::unique_ptr<Entry> entry = Entry::createEntryFromPath(path, type);
+	return entry->json().dump();
+}
+
 } // namespace HomeServer::Python

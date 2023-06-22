@@ -10,63 +10,6 @@ namespace HomeServer::Python
 
 namespace fs = std::filesystem;
 
-uint64_t initilizeFileTransfer(const std::string& path,
-	const std::string& filename,
-	const uint64_t filesize,
-	const std::string& metadata_json)
-{
-	// TODO: add this when PermissionManager will have been created
-	//PermissionManager pm;
-	//if(!pm.canWrite(path))
-	//	throw InvalidCredentials("NoWritePermission");
-
-	using namespace EntryError;
-	File target_file{ std::filesystem::path{path} / filename };
-	if (target_file.exists())
-		throw std::runtime_error(toString(AlreadyExists));
-
-	UploadManager um{ target_file };
-	if (um.uploadStarted())
-		throw std::runtime_error("UploadInProgress");
-
-	FileMetadata meta = FileMetadata::fromJson(metadata_json);
-	um.setMetadata(meta);
-	um.setSize(filesize);
-	return um.startUpload();
-}
-
-void upload(const uint64_t upload_id,
-	uint64_t start_byte,
-	uint64_t end_byte,
-	const std::string& data)
-{
-	// create UM with the upload_id
-	UploadManager um = UploadManager::fromId(upload_id);
-
-	// TODO: add this when PermissionManager will have been created
-	//PermissionManager pm;
-	//if(!pm.canWrite(path))
-	//	throw InvalidCredentials("NoPermission");
-
-	if (!um.uploadStarted())
-		throw std::runtime_error("NoUpload");
-
-	// check if bytes are correct
-	File target = um.file();
-
-	if (start_byte != target.size() ||
-		end_byte > um.filesize() - 1)
-		throw std::runtime_error("InvalidRange");
-
-	uint64_t range_size = end_byte - start_byte + 1;
-	if (range_size != data.size())
-		throw std::runtime_error("SizeMismatch");
-
-	target.append(data);
-	if (target.size() == um.filesize())
-		um.completeUpload();
-}
-
 void create(const std::string& path,
 	const std::string& entry_name,
 	const std::string& metadata_json)
@@ -150,5 +93,86 @@ void remove(const std::string& path)
 	entry->remove();
 }
 
+uint64_t initilizeFileTransfer(const std::string& path,
+	const std::string& filename,
+	const uint64_t filesize,
+	const std::string& metadata_json)
+{
+	// TODO: add this when PermissionManager will have been created
+	//PermissionManager pm;
+	//if(!pm.canWrite(path))
+	//	throw InvalidCredentials("NoWritePermission");
+
+	using namespace EntryError;
+	File target_file{ std::filesystem::path{path} / filename };
+	if (target_file.exists())
+		throw std::runtime_error(toString(AlreadyExists));
+
+	UploadManager um{ target_file };
+	if (um.uploadStarted())
+		throw std::runtime_error("UploadInProgress");
+
+	FileMetadata meta = FileMetadata::fromJson(metadata_json);
+	um.setMetadata(meta);
+	um.setSize(filesize);
+	return um.startUpload();
+}
+
+void upload(const uint64_t upload_id,
+	uint64_t start_byte,
+	uint64_t end_byte,
+	const std::string& data)
+{
+	// create UM with the upload_id
+	UploadManager um = UploadManager::fromId(upload_id);
+
+	// TODO: add this when PermissionManager will have been created
+	//PermissionManager pm;
+	//if(!pm.canWrite(path))
+	//	throw InvalidCredentials("NoPermission");
+
+	if (!um.uploadStarted())
+		throw std::runtime_error("NoUpload");
+
+	// check if bytes are correct
+	File target = um.file();
+
+	if (start_byte != target.size() ||
+		end_byte > um.filesize() - 1)
+		throw std::runtime_error("InvalidRange");
+
+	uint64_t range_size = end_byte - start_byte + 1;
+	if (range_size != data.size())
+		throw std::runtime_error("SizeMismatch");
+
+	target.append(data);
+	if (target.size() == um.filesize())
+		um.completeUpload();
+}
+
+pybind11::bytes read(const std::string& path,
+	const uint64_t start,
+	const uint64_t end)
+{
+	// TODO: add this when PermissionManager will have been created
+	//PermissionManager pm;
+	//if(!pm.canWrite(path))
+	//	throw InvalidCredentials("NoPermission");
+
+	if (!Entry::valid(path))
+		throw std::runtime_error(EntryError::toString(EntryError::InvalidPath));
+
+	if (!Entry::exists(path))
+		throw std::runtime_error(EntryError::toString(EntryError::NonExistent));
+
+	Entry::EntryType type = Entry::type(path);
+	if (type != Entry::EntryType::File)
+		throw std::runtime_error("NotAFile");
+	File file{ path };
+	
+	std::string data = file.read(start, end);
+
+	return pybind11::bytes(data);
+}
 
 }
