@@ -26,8 +26,17 @@ Page {
 
 	ListView {
 		id: matchesList
+		function getModelWithCdup() {
+			let cdup_model = [
+				{
+					'name':'<-',
+					'type':'back'
+				}
+			]
+			return cdup_model.concat(root.matches)
+		}
 		anchors.fill: parent
-		model: root.matches
+		model: getModelWithCdup()
 		onModelChanged: console.log("Model count is ", model.length)
 		delegate: Item {
 			id: matchesDelegate
@@ -82,7 +91,8 @@ Page {
 				}
 				onDoubleClicked: {
 					FlowController.pop()
-					Backend.setCwd(modelData.path, modelData.type)
+					if(modelData.type !== 'back')
+						Backend.setCwd(modelData.path, modelData.type)
 				}
 			}
 		}

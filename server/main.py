@@ -70,7 +70,7 @@ def initUpload(path: str | None, file: structs.FileInfo, request: Request, respo
 	# get the upload id
 	upload_id = backend.initializeFileTransfer(path, file.name, file.size, file.meta.json())
 	# append upload_id as a query param to the request url
-	location_url = str(request.base_url) + "/upload/" + str(upload_id)
+	location_url = str(request.base_url) + "upload/" + str(upload_id)
 	response.headers["Location"] = location_url
 
 @app.post('/init-upload/')

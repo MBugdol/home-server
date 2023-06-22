@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
+import QtQuick.Dialogs
 import "../utils"
 
 Page {
@@ -29,11 +30,41 @@ Page {
 				onAccepted: Backend.searchFor(text)
 			}
 		}
-	
 	}
+
+	FileDialog {
+		id: fileUploadDialog
+		acceptLabel: "Upload"
+		rejectLabel: "Cancel"
+		options: FileDialog.ReadOnly | FileDialog.DontConfirmOverwrite
+		onAccepted: Backend.uploadFile(selectedFile)
+	}
+
 	ScrollView {
 		id: mainMenuScroll
 		anchors.fill: parent
+		MouseArea {
+			id: backgroundMouseArea
+			anchors.fill: parent
+			acceptedButtons: Qt.RightButton
+			onClicked: function (mouse) {
+				if(mouse.button === Qt.RightButton)
+					backgroundContextMenu.popup()
+			}
+
+			Menu {
+				id: backgroundContextMenu
+				MenuItem {
+					text: "New folder"
+					onClicked: Backend.createNewFolder()
+				}
+				MenuItem {
+					text: "Upload a file"
+					onClicked: fileUploadDialog.open()
+				}
+			}
+		} // backgroundMouseArea
+
 		GridLayout {
 			id: tileGrid
 			readonly property int minColSpacing: 5

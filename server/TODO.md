@@ -8,6 +8,7 @@
 - [ ] secure table requests for nonexistent entries
 - [ ] bind uploads to users
 - [ ] server initializer class
+- [ ] create new folder - fix name collisions
 
 Libs:
 - [!] threads (async in PY)

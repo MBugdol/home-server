@@ -1,6 +1,6 @@
 import requests
 import app.flow as flow
-from PySide6.QtCore import QObject, Slot, Signal
+from PySide6.QtCore import QObject, Slot, Signal, QUrl, QFileInfo
 from pathlib import PurePath
 
 _default_url = 'http://localhost:8000'
@@ -20,6 +20,32 @@ class APICaller(QObject):
 		full_path = _default_url + '/search/' + directory
 		response = requests.post(full_path, params={"phrase":phrase})
 		return response.json()
+	
+	@Slot(str, str)
+	def create(self, directory, type):
+		full_path = _default_url + '/create/' + directory
+		body = {
+			'name': 'NewFolder',
+			'meta': {
+				'type': type
+			}
+		}
+		response = requests.post(full_path, json = body)
+
+	@Slot(str, str, int, 'QVariantList', result=str)
+	def initUpload(self, directory, name, size, metadata):
+		full_path = _default_url + '/init-upload/' + directory
+		body = {
+			'name': name,
+			'size': size,
+			'meta': metadata
+		}
+		response = requests.post(full_path, json=body)
+		return response.headers["Location"]
+
+	@Slot("QVariantList", str)
+	def upload(self, files, location):
+		response = requests.put(location, files=files)
 	
 class Backend(QObject):
 	cwdChanged = Signal()
@@ -64,3 +90,21 @@ class Backend(QObject):
 		entries_found = response['matches']
 		self.FlowController.push('qrc:/menu/search_results.qml', args={"phrase":phrase, "matches":entries_found})
 		return entries_found
+		
+	# Creation
+
+	@Slot()
+	def createNewFolder(self):
+		self.ApiCaller.create(str(self.cwd), 'application/x-directory')
+		self.cwdChanged.emit()
+
+	@Slot(str)
+	def uploadFile(self, path):
+		path_url = QUrl(path)
+		file_info = QFileInfo(path_url.toLocalFile())
+		upload_location = self.ApiCaller.initUpload(str(self.cwd), 
+				path_url.fileName(), 
+				file_info.size(),
+				{})
+		file = {'file': open(path_url.toLocalFile(), 'rb')}
+		self.ApiCaller.upload(file, upload_location)
