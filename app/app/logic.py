@@ -108,3 +108,4 @@ class Backend(QObject):
 				{})
 		file = {'file': open(path_url.toLocalFile(), 'rb')}
 		self.ApiCaller.upload(file, upload_location)
+		self.cwdChanged.emit()

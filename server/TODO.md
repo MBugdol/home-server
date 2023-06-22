@@ -3,12 +3,14 @@
 ## Important
 
 - [ ] /download/path endpoint
+- [ ] /delete/<path> endpoint
+- [ ] /rename/<path> endpoint
+- [ ] create new folder - fix name collisions
 - [ ] basic user authentication
 - [~] secure query class
 - [ ] secure table requests for nonexistent entries
 - [ ] bind uploads to users
 - [ ] server initializer class
-- [ ] create new folder - fix name collisions
 
 Libs:
 - [!] threads (async in PY)
