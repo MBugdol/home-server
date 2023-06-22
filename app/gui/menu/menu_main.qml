@@ -97,12 +97,13 @@ Page {
 				}
 				Component.onCompleted: {setModel(Backend.getCurrentChildren())}
 				GridTile {
-					onClicked: {
-						if(modelData.type == "directory")
-							Backend.cd(modelData.name)
-						else if(modelData.type == "cdup")
-							Backend.cdUp()
-
+					onClicked: function(mouse) {
+						if(mouse.button === Qt.LeftButton) {
+							if(modelData.type == "directory")
+								Backend.cd(modelData.name)
+							else if(modelData.type == "cdup")
+								Backend.cdUp()
+						}
 					}
 					text: modelData.name
 					Image {

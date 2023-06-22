@@ -79,7 +79,7 @@ class Backend(QObject):
 	@Slot(str, str)
 	def setCwd(self, path: str, type: str):
 		if(type == "directory"):
-			self.cwd = path
+			self.cwd = PurePath(path)
 		else:
 			self.cwd = PurePath(path).parent
 		self.cwdChanged.emit()

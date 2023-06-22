@@ -30,6 +30,7 @@ Item {
 		id: control
 		anchors.fill: parent
 		hoverEnabled: true
+		acceptedButtons: Qt.AllButtons
 		onClicked: (mouse_event) => root.clicked(mouse_event)
 	} // control
 	

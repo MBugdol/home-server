@@ -30,14 +30,14 @@ Page {
 			let cdup_model = [
 				{
 					'name':'<-',
-					'type':'back'
+					'type':'back',
+					'path':''
 				}
 			]
 			return cdup_model.concat(root.matches)
 		}
 		anchors.fill: parent
 		model: getModelWithCdup()
-		onModelChanged: console.log("Model count is ", model.length)
 		delegate: Item {
 			id: matchesDelegate
 			width: matchesList.width
