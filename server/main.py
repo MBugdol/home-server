@@ -13,72 +13,72 @@ if __name__ == '__main__':
 
 def exceptionAs422Details(func):
 	@functools.wraps(func)
-	def exceptionAs422DetailsDecorator(*args, **kwargs):
+	async def exceptionAs422DetailsDecorator(*args, **kwargs):
 		try:
-			return func(*args, **kwargs)
+			return await func(*args, **kwargs)
 		except Exception as e:
 			raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
 	return exceptionAs422DetailsDecorator
 
 @app.get('/')
-def root():
+async def root():
 	return {'message' : 'Hello world!'}
 
 @app.get('/info/{path:path}')
 @exceptionAs422Details
-def info(path: str):
+async def info(path: str):
 	return json.loads(backend.info(path))
 
 @app.get('/tree/{path:path}')
 @exceptionAs422Details
-def tree(path: str):
+async def tree(path: str):
 	return json.loads(backend.list(path))
 
 @app.get('/tree/')
 @exceptionAs422Details
-def tree():
+async def tree():
 	return tree("")
 
 @app.post('/search/{path:path}')
 @exceptionAs422Details
-def search(path: str, phrase: str):
+async def search(path: str, phrase: str):
 	return json.loads(backend.search(path, phrase))
 
 @app.post('/search/')
 @exceptionAs422Details
-def search(phrase: str):
+async def search(phrase: str):
 	return search("", phrase)
 
 @app.post('/create/{path:path}')
 @exceptionAs422Details
-def create(path: str, entry: structs.FileInfo):
+async def create(path: str, entry: structs.FileInfo):
 	print(f"Endpoint create, args: {path}, {entry.json()}")
 	backend.create(path, entry.name, entry.meta.json())
 
 @app.post('/create/')
 @exceptionAs422Details
-def create(entry: structs.FileInfo):
+async def create(entry: structs.FileInfo):
 	return create("", entry)
 
 @app.post('/rename/{path:path}')
 @exceptionAs422Details
-def rename(path: str, to: str):
+async def rename(path: str, to: str):
 	backend.rename(path, to)
 
 @app.post('/move/{path:path}')
 @exceptionAs422Details
-def move(path: str, to: str):
+async def move(path: str, to: str):
 	backend.move(path, to)
 
 @app.delete('/delete/{path:path}')
 @exceptionAs422Details
-def delete(path: str):
+async def delete(path: str):
 	backend.remove(path)
 
 
 @app.post('/init-upload/{path:path}')
 @exceptionAs422Details
-def initUpload(path: str | None, file: structs.FileInfo, request: Request, response: Response):
+async def initUpload(path: str | None, file: structs.FileInfo, request: Request, response: Response):
 	# get the upload id
 	upload_id = backend.initializeFileTransfer(path, file.name, file.size, file.meta.json())
 	# append upload_id as a query param to the request url
@@ -87,12 +87,12 @@ def initUpload(path: str | None, file: structs.FileInfo, request: Request, respo
 
 @app.post('/init-upload/')
 @exceptionAs422Details
-def initUpload(file: structs.FileInfo, request: Request, response: Response):
+async def initUpload(file: structs.FileInfo, request: Request, response: Response):
 	return initUpload("", file, request, response)
 
 @app.put('/upload/{id}')
 @exceptionAs422Details
-def upload(file: UploadFile, id: int):
+async def upload(file: UploadFile, id: int):
 	chunk_size = 256 * 1024
 	bytes_sent = 0
 	while(bytes_sent < file.size):
@@ -113,7 +113,7 @@ def upload(file: UploadFile, id: int):
 
 @app.get('/download/{path:path}')
 @exceptionAs422Details
-def download(path: str) -> bytes:
+async def download(path: str) -> bytes:
 	chunk_size = 256 * 1024
 	file = json.loads(backend.info(path))
 	if(file['type'] != 'file'):

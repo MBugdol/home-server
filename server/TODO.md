@@ -2,9 +2,8 @@
 
 ## Important
 
-- [ ] threads (async in PY)
-- [ ] /copy/<path> endpoint
 - [ ] create new folder - fix name collisions
+- [ ] /copy/<path> endpoint
 
 - [ ] basic user authentication
 - [~] secure query class
@@ -53,4 +52,6 @@ Libs:
 - [x] /rename/<path> endpoint
 - [x] /move/<path> endpoint
 - [x] /download/path endpoint
+- [x] threads (async in PY)
+
 

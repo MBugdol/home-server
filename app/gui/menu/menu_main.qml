@@ -17,12 +17,22 @@ Page {
 	background: Rectangle {color: Material.backgroundColor}
 	header: ToolBar {
 		RowLayout {
-			anchors.fill: parent
+			height: parent.height
+			width: 0.9 * parent.width
+			anchors.horizontalCenter: parent.horizontalCenter
 			spacing: 5
+			Button {
+				id: cdRootButton
+				Layout.preferredWidth: implicitHeight
+				text: "~"
+				onClicked: Backend.setCwd('', 'directory')
+			}
 			Label {
 				id: cwdLabel
 				Layout.maximumWidth: 0.4 * parent.width
 				text: root.cwd
+				elide: Text.ElideLeft
+				clip: true
 			}
 			TextField {
 				Layout.minimumWidth: 0.2 * parent.width
