@@ -36,6 +36,7 @@ Page {
 		id: fileUploadDialog
 		acceptLabel: qsTr("Upload")
 		fileMode: FileDialog.SaveFile
+		options: FileDialog.DontConfirmOverwrite | FileDialog.ReadOnly
 		onAccepted: Backend.uploadFile(selectedFile)
 	}
 
@@ -132,21 +133,21 @@ Page {
 						acceptedButtons: Qt.AllButtons
 
 						Menu {
-							id: fileContextMenu
+							id: entryContextMenu
+							MenuItem {
+								text: "Delete " + modelData.name
+								onClicked: Backend.delete(modelData.name)
+							}
 							MenuItem {
 								text: "Download"
+								enabled: modelData.type == "file"
 								onClicked: fileDownloadDialog.openWithName(modelData.name)
-								
 							}
 						}
 						onClicked: function(mouse) {
-							if(mouse.button === Qt.LeftButton) {
-								foldersRepeater.currentIndex = index
-							}
-							else if(mouse.button === Qt.RightButton) {
-								if(modelData.type == "file")
-									fileContextMenu.popup()
-							}
+							foldersRepeater.currentIndex = index
+							if(mouse.button === Qt.RightButton)
+								entryContextMenu.popup()
 						}
 						onDoubleClicked: function(mouse) {
 							if(mouse.button === Qt.LeftButton) {
