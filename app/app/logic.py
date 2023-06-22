@@ -55,6 +55,10 @@ class APICaller(QObject):
 	def delete(self, directory):
 		full_path = _default_url + '/delete/' + directory
 		requests.delete(full_path)
+
+	def rename(self, directory, new_name):
+		full_path = _default_url + '/rename/' + directory
+		requests.post(full_path, params = {'to': new_name})
 	
 class Backend(QObject):
 	cwdChanged = Signal()
@@ -105,6 +109,12 @@ class Backend(QObject):
 	@Slot()
 	def createNewFolder(self):
 		self.ApiCaller.create(str(self.cwd), 'application/x-directory')
+		self.cwdChanged.emit()
+
+	@Slot(str, str)
+	def rename(self, entry, new_name):
+		full_path = self.cwd / entry
+		self.ApiCaller.rename(str(full_path), new_name) 
 		self.cwdChanged.emit()
 
 	@Slot(str)

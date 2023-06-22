@@ -54,6 +54,42 @@ Page {
 		}
 	}
 
+	Popup {
+		id: entryRenameDialog
+		property string entry
+		parent: Overlay.overlay
+		anchors.centerIn: parent
+		width: 0.5 * parent.width
+		Column {
+			anchors.fill: parent
+			Label {
+				text: "Enter the new name:"
+				anchors.horizontalCenter: parent.horizontalCenter
+			}
+			TextField {
+				id: entryRenameInput
+				text: entryRenameDialog.entry
+				horizontalAlignment: Text.AlignHCenter
+				anchors.horizontalCenter: parent.horizontalCenter
+				clip: true
+			}
+			Button {
+				id: entryRenameSubmit
+				anchors.horizontalCenter: parent.horizontalCenter
+				text: "Submit"
+				onClicked: {
+					Backend.rename(entryRenameDialog.entry, entryRenameInput.text)
+					entryRenameDialog.close()
+				}
+			}
+		}
+		function pop(entry_)
+		{
+			entryRenameDialog.entry = entry_
+			open()
+		}
+	}
+
 	ScrollView {
 		id: mainMenuScroll
 		anchors.fill: parent
@@ -134,6 +170,10 @@ Page {
 
 						Menu {
 							id: entryContextMenu
+							MenuItem {
+								text: "Rename"
+								onClicked: entryRenameDialog.pop(modelData.name)
+							}
 							MenuItem {
 								text: "Delete " + modelData.name
 								onClicked: Backend.delete(modelData.name)

@@ -6,13 +6,15 @@ Page {
 	background: Rectangle {color: "steelblue"}
 	Label {
 		anchors.centerIn: parent
-		text: "I'm broot!"
+		text: "HoSe"
+		font.pixelSize: root.height * 0.4
+		verticalAlignment: Text.AlignVCenter
 	}
 	Timer {
 		id: tempTimer
 		interval: 1000
 		running: true
 		repeat: false
-		onTriggered: FlowController.switchTo("login/loginpage.qml")
+		onTriggered: FlowController.switchTo("menu/menu_main.qml")
 	}
 }

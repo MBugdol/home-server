@@ -2,7 +2,6 @@
 <qresource prefix="/">
 	<file>main.qml</file>
 	<file>boot/bootpage.qml</file>
-	<file>login/loginpage.qml</file>
 	<file>menu/menu_main.qml</file>
 	<file>menu/search_results.qml</file>
 </qresource>
