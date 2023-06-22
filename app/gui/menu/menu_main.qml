@@ -7,6 +7,13 @@ import "../utils"
 
 Page {
 	id: root
+	property string moveOrigin: Backend.getMoveOrigin()
+	property string cwd: Backend.getCwd()
+	Connections {
+		target: Backend
+		function onCwdChanged() {root.cwd = Backend.getCwd()}
+	}
+
 	background: Rectangle {color: Material.backgroundColor}
 	header: ToolBar {
 		RowLayout {
@@ -15,12 +22,7 @@ Page {
 			Label {
 				id: cwdLabel
 				Layout.maximumWidth: 0.4 * parent.width
-				text: Backend.getCwd()
-				elide: Text.ElideRight
-				Connections {
-					target: Backend
-					function onCwdChanged() {cwdLabel.text = Backend.getCwd()}
-				}
+				text: root.cwd
 			}
 			TextField {
 				Layout.minimumWidth: 0.2 * parent.width
@@ -114,6 +116,11 @@ Page {
 					text: "Upload a file"
 					onClicked: fileUploadDialog.open()
 				}
+				MenuItem {
+					text: "Paste"
+					enabled: root.moveOrigin !== ''
+					onClicked: Backend.paste()
+				}
 			}
 		} // backgroundMouseArea
 
@@ -152,7 +159,13 @@ Page {
 				GridTile {
 					id: delegateTile
 					text: modelData.name
-					color: foldersRepeater.currentIndex === index ? Material.primaryColor : "transparent"
+					color: {
+						if(foldersRepeater.currentIndex === index)
+						 	return Material.primaryColor 
+						else if(root.moveOrigin == modelData.path)
+							return Material.accentColor
+						return "transparent"
+					}
 					Image {
 						anchors.centerIn: parent
 						width: 0.8 * parent.width
@@ -175,12 +188,20 @@ Page {
 								onClicked: entryRenameDialog.pop(modelData.name)
 							}
 							MenuItem {
+								text: "Cut"
+								onClicked: {
+									Backend.move(modelData.name)
+									root.moveOrigin = Backend.getMoveOrigin()
+								}
+							}
+
+							MenuItem {
 								text: "Delete " + modelData.name
 								onClicked: Backend.delete(modelData.name)
 							}
 							MenuItem {
 								text: "Download"
-								enabled: modelData.type == "file"
+								enabled: modelData.type === "file"
 								onClicked: fileDownloadDialog.openWithName(modelData.name)
 							}
 						}

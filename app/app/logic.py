@@ -59,6 +59,10 @@ class APICaller(QObject):
 	def rename(self, directory, new_name):
 		full_path = _default_url + '/rename/' + directory
 		requests.post(full_path, params = {'to': new_name})
+
+	def move(self, directory, new_location):
+		full_path = _default_url + '/move/' + directory
+		requests.post(full_path, params = {'to': new_location})
 	
 class Backend(QObject):
 	cwdChanged = Signal()
@@ -68,6 +72,7 @@ class Backend(QObject):
 		self.ApiCaller = APICaller()
 		self.FlowController = flow.FlowController()
 		self.cwd = PurePath()
+		self.MoveOrigin = ''
 	
 	@Slot(result = 'QVariantList')
 	def getCurrentChildren(self):
@@ -142,3 +147,20 @@ class Backend(QObject):
 		with open(QUrl(local_path).toLocalFile(), 'wb') as out:
 			for chunk in streamer.iter_content(1024 * 256):
 				out.write(chunk)
+
+	@Slot(str)
+	def move(self, file):
+		self.MoveOrigin = self.cwd / file
+
+	@Slot(result = str)
+	def getMoveOrigin(self):
+		return str(self.MoveOrigin)
+	
+	@Slot()
+	def paste(self):
+		target_path = self.cwd / self.MoveOrigin.name
+		self.ApiCaller.move(str(self.MoveOrigin), str(target_path))
+		self.MoveOrigin = ''
+		self.cwdChanged.emit()
+
+
