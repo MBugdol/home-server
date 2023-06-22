@@ -59,6 +59,11 @@ def create(entry: structs.FileInfo):
 def rename(path: str, to: str):
 	backend.rename(path, to)
 
+@app.post('/move/{path:path}')
+@exceptionAs422Details
+def move(path: str, to: str):
+	backend.move(path, to)
+
 @app.delete('/delete/{path:path}')
 @exceptionAs422Details
 def delete(path: str):

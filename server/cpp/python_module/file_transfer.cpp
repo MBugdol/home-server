@@ -113,6 +113,28 @@ void rename(const std::string& path,
 	entry->rename(new_name);
 }
 
+void move(const std::string& path,
+	const std::string& target)
+{
+	// TODO: add this when PermissionManager will have been created
+	//PermissionManager pm;
+	//if(!pm.canWrite(path))
+	//	throw InvalidCredentials("NoWritePermission");
+
+	if(!Entry::valid(path) || !Entry::valid(target))
+		throw std::runtime_error(EntryError::toString(EntryError::InvalidPath));
+
+	if(!Entry::exists(path))
+		throw std::runtime_error(EntryError::toString(EntryError::NonExistent));
+
+	if(Entry::exists(target))
+		throw std::runtime_error(EntryError::toString(EntryError::AlreadyExists));
+
+	Entry::EntryType type = Entry::type(path);
+	std::unique_ptr<Entry> entry = Entry::createEntryFromPath(path, type);
+	entry->move(target);
+}
+
 void remove(const std::string& path)
 {
 	// TODO: add this when PermissionManager will have been created

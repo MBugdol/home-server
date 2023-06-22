@@ -98,6 +98,19 @@ void Entry::rename(const std::string& new_name) const
 	fs::rename(fullPath(), m_server_root_path / new_path);
 }
 
+void Entry::move(const fs::path& target) const
+{
+	using namespace EntryError;
+	if (!exists())
+		throw std::runtime_error(toString(NonExistent));
+	if (!valid(target))
+		throw std::runtime_error(toString(InvalidPath));
+	if (exists(target))
+		throw std::runtime_error(toString(AlreadyExists));
+
+	fs::rename(fullPath(), m_server_root_path / target);
+}
+
 
 bool Entry::valid(const std::filesystem::path& path)
 {

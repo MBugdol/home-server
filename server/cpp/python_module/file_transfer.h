@@ -23,6 +23,9 @@ void upload(const uint64_t upload_id,
 void rename(const std::string& path,
 	const std::string& new_name);
 
+void move(const std::string& path,
+	const std::string& target);
+
 void remove(const std::string& path);
 
 }

@@ -2,10 +2,10 @@
 
 ## Important
 
-- [!] /rename/<path> endpoint
-- [ ] /download/path endpoint
-- [ ] create new folder - fix name collisions
+- [!] /download/path endpoint
 - [ ] threads (async in PY)
+- [ ] /copy/<path> endpoint
+- [ ] create new folder - fix name collisions
 
 - [ ] basic user authentication
 - [~] secure query class
@@ -51,3 +51,6 @@ Libs:
 - [x] /search/ endpoint
 - [x] regex
 - [x] /delete/<path> endpoint
+- [x] /rename/<path> endpoint
+- [x] /move/<path> endpoint
+
