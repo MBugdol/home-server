@@ -46,6 +46,11 @@ class APICaller(QObject):
 	@Slot("QVariantList", str)
 	def upload(self, files, location):
 		response = requests.put(location, files=files)
+
+	def download(self, directory):
+		full_path = _default_url + '/download/' + directory
+		response = requests.get(full_path)
+		return response
 	
 class Backend(QObject):
 	cwdChanged = Signal()
@@ -109,3 +114,11 @@ class Backend(QObject):
 		file = {'file': open(path_url.toLocalFile(), 'rb')}
 		self.ApiCaller.upload(file, upload_location)
 		self.cwdChanged.emit()
+
+	@Slot(str, str)
+	def downloadFile(self, file, local_path):
+		full_path = self.cwd / file
+		streamer = self.ApiCaller.download(str(full_path))
+		with open(QUrl(local_path).toLocalFile(), 'wb') as out:
+			for chunk in streamer.iter_content(1024 * 256):
+				out.write(chunk)

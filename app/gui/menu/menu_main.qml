@@ -34,10 +34,23 @@ Page {
 
 	FileDialog {
 		id: fileUploadDialog
-		acceptLabel: "Upload"
-		rejectLabel: "Cancel"
-		options: FileDialog.ReadOnly | FileDialog.DontConfirmOverwrite
+		acceptLabel: qsTr("Upload")
+		fileMode: FileDialog.SaveFile
 		onAccepted: Backend.uploadFile(selectedFile)
+	}
+
+	FileDialog {
+		id: fileDownloadDialog
+		property string serverFilename
+		fileMode: FileDialog.SaveFile
+		onAccepted: Backend.downloadFile(serverFilename, selectedFile)
+
+		function openWithName(filename)
+		{
+			fileDownloadDialog.selectedFile = fileDownloadDialog.currentFolder + "/" + filename
+			serverFilename = filename
+			fileDownloadDialog.open()
+		}
 	}
 
 	ScrollView {
@@ -46,10 +59,12 @@ Page {
 		MouseArea {
 			id: backgroundMouseArea
 			anchors.fill: parent
-			acceptedButtons: Qt.RightButton
+			acceptedButtons: Qt.AllButtons
 			onClicked: function (mouse) {
 				if(mouse.button === Qt.RightButton)
 					backgroundContextMenu.popup()
+				else if(mouse.button === Qt.LeftButton)
+					foldersRepeater.currentIndex = -1
 			}
 
 			Menu {
@@ -85,6 +100,7 @@ Page {
 			}
 			Repeater {
 				id: foldersRepeater
+				property int currentIndex: -1
 				function setModel(new_model)
 				{
 					let model_begin = [
@@ -97,15 +113,9 @@ Page {
 				}
 				Component.onCompleted: {setModel(Backend.getCurrentChildren())}
 				GridTile {
-					onClicked: function(mouse) {
-						if(mouse.button === Qt.LeftButton) {
-							if(modelData.type == "directory")
-								Backend.cd(modelData.name)
-							else if(modelData.type == "cdup")
-								Backend.cdUp()
-						}
-					}
+					id: delegateTile
 					text: modelData.name
+					color: foldersRepeater.currentIndex === index ? Material.primaryColor : "transparent"
 					Image {
 						anchors.centerIn: parent
 						width: 0.8 * parent.width
@@ -115,12 +125,46 @@ Page {
 						source: modelData.type === "directory" ? "../res/img/folder-icon.svg" : "../res/img/file-icon.svg" // add main.qml to qrc?
 						fillMode: Image.PreserveAspectFit
 					}
+					MouseArea {
+						id: tileMouseArea
+						anchors.fill: parent
+						hoverEnabled: true
+						acceptedButtons: Qt.AllButtons
+
+						Menu {
+							id: fileContextMenu
+							MenuItem {
+								text: "Download"
+								onClicked: fileDownloadDialog.openWithName(modelData.name)
+								
+							}
+						}
+						onClicked: function(mouse) {
+							if(mouse.button === Qt.LeftButton) {
+								foldersRepeater.currentIndex = index
+							}
+							else if(mouse.button === Qt.RightButton) {
+								if(modelData.type == "file")
+									fileContextMenu.popup()
+							}
+						}
+						onDoubleClicked: function(mouse) {
+							if(mouse.button === Qt.LeftButton) {
+								if(modelData.type == "directory")
+									Backend.cd(modelData.name)
+								else if(modelData.type == "cdup")
+									Backend.cdUp()
+							}
+						}
+						
+					} // tileMouseArea
 				}
 			}
 			Connections {
 				target: Backend
 				function onCwdChanged() {
 					foldersRepeater.setModel(Backend.getCurrentChildren())
+					foldersRepeater.currentIndex = -1
 				}
 			}
 		}
