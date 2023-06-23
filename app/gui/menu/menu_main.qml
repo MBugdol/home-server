@@ -102,6 +102,52 @@ Page {
 		}
 	}
 
+	Popup {
+		id: errorPopup
+		property string text
+		
+		parent: Overlay.overlay
+		anchors.centerIn: parent
+		width: 1.5 * errorColumn.childrenRect.width
+		height: 1.5 * errorColumn.childrenRect.height
+		modal: true
+		closePolicy: Popup.NoAutoClose
+		Column {
+			id: errorColumn
+			anchors.centerIn: parent
+			width: childrenRect.width
+			height: errorLabel.height + errorOkButton.height
+			Label {
+				anchors.horizontalCenter: parent.horizontalCenter
+				text: "An error occured!"
+				font.bold: true
+				font.pointSize: 25
+			}
+			Label {
+				id: errorLabel
+				anchors.horizontalCenter: parent.horizontalCenter
+				text: errorPopup.text
+			}
+			Button {
+				id: errorOkButton
+				anchors.horizontalCenter: parent.horizontalCenter
+				width: errorLabel.width
+				text: "OK"
+				onClicked: errorPopup.close()
+			}
+		}
+		Connections {
+			target: Backend
+			function onErrorOccured (text) {
+				errorPopup.pop(text)
+			}
+		}
+		function pop(text) {
+			errorPopup.text = text
+			errorPopup.open()
+		}
+	}
+
 	ScrollView {
 		id: mainMenuScroll
 		anchors.fill: parent
